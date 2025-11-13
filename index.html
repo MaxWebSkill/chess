@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КЗ ДЮСШ "Дебют"</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #fff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #fff;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .nav {
+            background: #34495e;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #ecf0f1;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-btn:hover {
+            background: #2c3e50;
+            border-bottom-color: #3498db;
+        }
+
+        .nav-btn.active {
+            background: #2c3e50;
+            border-bottom-color: #3498db;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .news-post {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .news-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .news-title {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .news-desc {
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-date {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .homework-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .homework-title {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .homework-image {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: #fff;
+        }
+
+        .table th {
+            background: #34495e;
+            color: #fff;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            background: #3498db;
+            color: #fff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .tournament-box {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .tournament-title {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .event-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .event-title {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .event-info {
+            color: #555;
+            margin-bottom: 0.3rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: #34495e;
+            color: #fff;
+            border: none;
+            padding: 0.8rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 101;
+            border-radius: 5px;
+            width: 50px;
+            height: 50px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .google-sheets-info {
+            background: #e8f4f8;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .nav {
+                flex-direction: column;
+                display: none;
+            }
+
+            .nav.mobile-open {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nav-btn {
+                width: 100%;
+                text-align: center;
+                border-bottom: 1px solid #2c3e50;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .table {
+                font-size: 0.9rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>КЗ ДЮСШ "Дебют"</h1>
+        <p>Група Волошинського Любомира</p>
+    </div>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+
+    <div class="nav" id="mainNav">
+        <button class="nav-btn active" onclick="showTab('news')">Новини</button>
+        <button class="nav-btn" onclick="showTab('homework')">Домашнє завдання</button>
+        <button class="nav-btn" onclick="showTab('members')">Список гуртка</button>
+        <button class="nav-btn" onclick="showTab('tournaments')">Турніри</button>
+        <button class="nav-btn" onclick="showTab('events')">Активні події</button>
+    </div>
+
+    <div class="container">
+        <div id="news" class="content active">
+            <div class="card">
+                <h2 class="card-title">Новини гуртка</h2>
+                <div id="newsList" class="loading">Завантаження новин...</div>
+            </div>
+        </div>
+
+        <div id="homework" class="content">
+            <div class="card">
+                <h2 class="card-title">Домашнє завдання</h2>
+                <div id="homeworkList" class="loading">Завантаження завдань...</div>
+            </div>
+        </div>
+
+        <div id="members" class="content">
+            <div class="card">
+                <h2 class="card-title">Список учасників гуртка</h2>
+                <div class="google-sheets-info">
+                    <strong>ℹ️ Інформація:</strong> Дані підтягуються з Google Таблиці через сервер та оновлюються автоматично
+                </div>
+                <div id="membersList" class="loading">Завантаження списку учасників...</div>
+            </div>
+        </div>
+
+        <div id="tournaments" class="content">
+            <div class="card">
+                <h2 class="card-title">Поточний турнір</h2>
+                <div id="currentTournament" class="loading">Завантаження...</div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Результати минулого тижня</h2>
+                <div id="lastWeekResults" class="loading">Завантаження...</div>
+            </div>
+        </div>
+
+        <div id="events" class="content">
+            <div class="card">
+                <h2 class="card-title">Активні шахові турніри</h2>
+                <div id="eventsList" class="loading">Завантаження подій...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // НАЛАШТУВАННЯ: Вкажіть URL вашого бекенду
+        const API_URL = 'http://localhost:3000/api';
+
+        let newsData = [];
+        let homeworkData = [];
+        let membersData = [];
+        let tournamentsData = { current: null, lastWeek: null };
+        let eventsData = [];
+        let googleSheetsUrl = ''; // Залишаємо для перевірки наявності конфігурації
+
+        // Завантаження даних
+        async function loadAllData() {
+            try {
+                await Promise.all([
+                    loadNews(),
+                    loadHomework(),
+                    loadSheetsConfig(),
+                    loadTournaments(),
+                    loadEvents()
+                ]);
+            } catch (error) {
+                console.error('Помилка завантаження:', error);
+            }
+        }
+
+        async function loadNews() {
+            try {
+                const response = await fetch(`${API_URL}/news`);
+                newsData = await response.json();
+                renderNews();
+            } catch (error) {
+                console.error('Помилка завантаження новин:', error);
+                renderNews();
+            }
+        }
+
+        async function loadHomework() {
+            try {
+                const response = await fetch(`${API_URL}/homework`);
+                homeworkData = await response.json();
+                renderHomework();
+            } catch (error) {
+                console.error('Помилка завантаження завдань:', error);
+                renderHomework();
+            }
+        }
+        
+        // Змінено: Перевіряємо URL і викликаємо функцію завантаження учасників
+        async function loadSheetsConfig() {
+            try {
+                const response = await fetch(`${API_URL}/sheets-config`);
+                const config = await response.json();
+                googleSheetsUrl = config.url || ''; 
+                await loadMembersFromSheets();
+            } catch (error) {
+                console.error('Помилка завантаження конфігурації:', error);
+                renderMembers();
+            }
+        }
+
+        // Змінено: Тепер просто викликаємо API бекенда, який сам завантажує дані з Google Sheets
+        async function loadMembersFromSheets() {
+            if (!googleSheetsUrl) {
+                // Якщо посилання не встановлено, відображаємо пустий список
+                membersData = [];
+                renderMembers();
+                return;
+            }
+
+            try {
+                // Викликаємо новий ендпоінт, який повертає вже розпарсений JSON
+                const response = await fetch(`${API_URL}/members`);
+                
+                if (!response.ok) {
+                     // Якщо бекенд повернув 500 (через помилку доступу до Google Sheets)
+                    const errorJson = await response.json();
+                    throw new Error(errorJson.error || 'Помилка бекенду при завантаженні учасників.');
+                }
+                
+                membersData = await response.json();
+                renderMembers();
+            } catch (error) {
+                console.error('Помилка завантаження учасників:', error);
+                
+                const list = document.getElementById('membersList');
+                list.innerHTML = `<div class="google-sheets-info" style="border-left-color: #e74c3c; color: #721c24;">
+                                    <strong>❌ Помилка завантаження даних!</strong><br>
+                                    Сервер не зміг отримати дані з Google Таблиці. Перевірте:
+                                    <ul>
+                                        <li>Чи вірне посилання в Адмін-панелі.</li>
+                                        <li>Чи має Таблиця **загальний доступ** ("Будь-хто з посиланням може **переглядати**").</li>
+                                    </ul>
+                                </div>`;
+                membersData = [];
+            }
+        }
+
+        async function loadTournaments() {
+            try {
+                const response = await fetch(`${API_URL}/tournaments`);
+                tournamentsData = await response.json();
+                renderTournaments();
+            } catch (error) {
+                console.error('Помилка завантаження турнірів:', error);
+                renderTournaments();
+            }
+        }
+
+        async function loadEvents() {
+            try {
+                const response = await fetch(`${API_URL}/events`);
+                eventsData = await response.json();
+                renderEvents();
+            } catch (error) {
+                console.error('Помилка завантаження подій:', error);
+                renderEvents();
+            }
+        }
+
+        function renderNews() {
+            const list = document.getElementById('newsList');
+            if (newsData.length === 0) {
+                list.innerHTML = '<p style="color: #7f8c8d;">Поки що новин немає</p>';
+                return;
+            }
+            list.innerHTML = newsData.map(post => `
+                <div class="news-post">
+                    ${post.image ? `<img src="${API_URL.replace('/api', '')}${post.image}" class="news-image" alt="${post.title}">` : ''}
+                    <div class="news-title">${post.title}</div>
+                    <div class="news-desc">${post.description}</div>
+                    <div class="news-date">Опубліковано: ${post.date}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderHomework() {
+            const list = document.getElementById('homeworkList');
+            if (homeworkData.length === 0) {
+                list.innerHTML = '<p style="color: #7f8c8d;">Поки що завдань немає</p>';
+                return;
+            }
+            list.innerHTML = homeworkData.map(hw => `
+                <div class="homework-item">
+                    <div class="homework-title">${hw.title}</div>
+                    ${hw.image ? `<img src="${API_URL.replace('/api', '')}${hw.image}" class="homework-image" alt="${hw.title}">` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderMembers() {
+            const list = document.getElementById('membersList');
+
+            if (membersData.length === 0 && googleSheetsUrl) {
+                // Якщо дані порожні, але URL встановлений, це може бути помилка завантаження
+                // Повідомлення про помилку буде відображено у блоці try-catch loadMembersFromSheets
+                if (list.innerHTML.includes('Завантаження')) {
+                     list.innerHTML = `<p style="color: #7f8c8d;">Дані не завантажено. Перевірте посилання в Адмін-панелі та доступ до Таблиці.</p>`;
+                }
+                return;
+            }
+            
+            if (!googleSheetsUrl) {
+                list.innerHTML = `<p style="color: #7f8c8d;">Посилання на Google Таблицю не встановлено в Адмін-панелі.</p>`;
+                return;
+            }
+
+            list.innerHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Ім'я</th>
+                            <th>Розряд</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${membersData.map((member, i) => `
+                            <tr>
+                                <td>${i + 1}</td>
+                                <td>${member.name}</td>
+                                <td><span class="rank-badge">${member.rank}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function renderTournaments() {
+            const current = document.getElementById('currentTournament');
+            const lastWeek = document.getElementById('lastWeekResults');
+
+            if (tournamentsData.current) {
+                current.innerHTML = `
+                    <div class="tournament-box">
+                        <div class="tournament-title">${tournamentsData.current.title}</div>
+                        <a href="${tournamentsData.current.link}" target="_blank" class="btn">Перейти до турніру</a>
+                    </div>
+                `;
+            } else {
+                current.innerHTML = '<p style="color: #7f8c8d;">Турнір не заплановано</p>';
+            }
+
+            if (tournamentsData.lastWeek) {
+                lastWeek.innerHTML = `
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                        <pre style="white-space: pre-line; font-family: Arial; color: #555;">${tournamentsData.lastWeek}</pre>
+                    </div>
+                `;
+            } else {
+                lastWeek.innerHTML = '<p style="color: #7f8c8d;">Результатів поки немає</p>';
+            }
+        }
+
+        function renderEvents() {
+            const list = document.getElementById('eventsList');
+            if (eventsData.length === 0) {
+                list.innerHTML = '<p style="color: #7f8c8d;">Активних подій немає</p>';
+                return;
+            }
+            list.innerHTML = eventsData.map(event => `
+                <div class="event-card">
+                    <div class="event-title">${event.title}</div>
+                    <div class="event-info"><strong>📅 Дата:</strong> ${event.date}</div>
+                    <div class="event-info"><strong>📍 Місце:</strong> ${event.location}</div>
+                    <div class="event-info" style="margin-top: 1rem;">${event.description}</div>
+                </div>
+            `).join('');
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            const clickedButton = event.target.closest('.nav-btn');
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+            
+            document.getElementById('mainNav').classList.remove('mobile-open');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mainNav').classList.toggle('mobile-open');
+        }
+
+        // Завантаження даних при старті
+        loadAllData();
+
+        // Періодичне оновлення (кожні 30 секунд)
+        setInterval(loadAllData, 30000);
+    </script>
+</body>
+</html>
