@@ -5,34 +5,288 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Адмін-панель</title>
     <style>
-        /* Мінімалістичні стилі для повернення до базового вигляду */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+        /* Стилі з вашого файлу admin.html */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #ecf0f1;
+            color: #333;
+        }
+
         .header {
-            background-color: #333; /* Темний заголовок */
-            color: white;
-            padding: 15px 20px;
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            color: #fff;
+            padding: 2rem;
             text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             position: relative;
         }
+
         .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #fff;
+            color: #c0392b;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .login-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
             font-size: 1.5rem;
         }
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: white;
-            padding: 20px;
-            border: 1px solid #ccc;
+
+        .section {
+            background: #fff;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+
+        .btn {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #229954;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            padding: 0.5rem 1rem;
+            width: auto;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #c0392b;
+        }
+
+        .info-box {
+            background: #e8f4f8;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+            color: #2c3e50;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s;
+            display: none; /* За замовчуванням приховано */
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 0.8rem;
+            background: #ecf0f1;
+            border: 2px dashed #bdc3c7;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: #d5dbdb;
+            border-color: #95a5a6;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: none; /* За замовчуванням приховано */
+        }
+
+        /* Стилі для списків контенту */
+        .content-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .content-item:last-child {
+            border-bottom: none;
+        }
+
+        .content-details {
+            flex-grow: 1;
+            margin-right: 1rem;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .item-meta {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .current-setting {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-top: 1.5rem;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .current-setting strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
         /* Стилі для вкладок */
         .tabs {
             display: flex;
+            flex-wrap: wrap;
             margin-bottom: 20px;
             border-bottom: 2px solid #ccc;
         }
@@ -50,368 +304,423 @@
         }
         .tab-btn.active {
             background: #fff;
-            color: #e74c3c;
-            border: 1px solid #e74c3c;
+            color: #c0392b;
+            border: 1px solid #c0392b;
             border-bottom: 1px solid #fff;
-        }
-        .content {
-            display: none;
-            padding: 15px 0;
-        }
-        .content.active {
-            display: block;
-        }
-        h2 {
-            color: #333;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"], 
-        input[type="file"],
-        input[type="password"],
-        input[type="url"],
-        textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-        button.submit-btn {
-            background: #28a745; /* Зелений колір */
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s;
-        }
-        button.submit-btn:hover:not(:disabled) {
-            background: #218838;
-        }
-        .logout-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .list-item {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 3px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .delete-btn {
-            background: #dc3545;
-            color: #fff;
-            border: none;
-            padding: 5px 8px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        .alert {
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid transparent;
-            border-radius: 4px;
+        .tab-content {
             display: none;
         }
-        .alert.success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
-        .alert.error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
-
-        #login-form {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background: white;
-            border: 1px solid #ccc;
+        .tab-content.active {
+            display: block;
         }
-        .section-separator {
-            border-bottom: 1px dashed #ccc;
-            margin: 20px 0;
-            padding-bottom: 10px;
+
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+
+            .logout-btn {
+                position: static;
+                display: block;
+                margin: 1rem auto 0;
+            }
         }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>Панель Керування</h1>
-        <button id="logoutBtn" class="logout-btn" style="display: none;">Вийти</button>
-    </div>
-
-    <div id="alertBox" class="alert"></div>
-
-    <div id="login-container">
-        <form id="login-form">
-            <h2>Вхід</h2>
-            <div class="form-group">
-                <label for="adminPassword">Пароль:</label>
-                <input type="password" id="adminPassword" required>
-            </div>
-            <button type="submit" class="submit-btn" id="loginBtn">Увійти</button>
-        </form>
-    </div>
-
-    <div id="admin-panel" class="container" style="display: none;">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('news-content')">Новини</button>
-            <button class="tab-btn" onclick="showTab('homework-content')">ДЗ</button>
-            <button class="tab-btn" onclick="showTab('events-content')">Події</button>
-            <button class="tab-btn" onclick="showTab('tournaments-content')">Турніри</button>
-            <button class="tab-btn" onclick="showTab('sheets-config-content')">Google Sheets</button>
-        </div>
-
-        <div id="news-content" class="content active">
-            <h2>Додати Новину</h2>
-            <form id="news-form">
-                <div class="form-group">
-                    <label for="newsTitle">Заголовок:</label>
-                    <input type="text" id="newsTitle" required>
-                </div>
-                <div class="form-group">
-                    <label for="newsDesc">Опис/Текст:</label>
-                    <textarea id="newsDesc" rows="5" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="newsImage">Зображення:</label>
-                    <input type="file" id="newsImage" accept="image/*">
-                </div>
-                <button type="submit" class="submit-btn" id="newsBtn">Додати Новину</button>
-            </form>
-
-            <div class="section-separator"></div>
-
-            <h2>Управління Новинами</h2>
-            <div id="newsList">
-                <p>Завантаження...</p>
-            </div>
-        </div>
-
-        <div id="homework-content" class="content">
-            <h2>Додати Домашнє Завдання</h2>
-            <form id="homework-form">
-                <div class="form-group">
-                    <label for="homeworkTitle">Коментар/Тема:</label>
-                    <input type="text" id="homeworkTitle" required>
-                </div>
-                <div class="form-group">
-                    <label for="homeworkImage">Зображення/Фото завдання:</label>
-                    <input type="file" id="homeworkImage" accept="image/*" required>
-                </div>
-                <button type="submit" class="submit-btn" id="homeworkBtn">Додати Завдання</button>
-            </form>
-            
-            <div class="section-separator"></div>
-
-            <h2>Управління ДЗ</h2>
-            <div id="homeworkList">
-                <p>Завантаження...</p>
-            </div>
-        </div>
-
-        <div id="events-content" class="content">
-            <h2>Додати Подію</h2>
-            <form id="event-form">
-                <div class="form-group">
-                    <label for="eventTitle">Заголовок Події:</label>
-                    <input type="text" id="eventTitle" required>
-                </div>
-                <div class="form-group">
-                    <label for="eventDate">Дата:</label>
-                    <input type="text" id="eventDate" placeholder="Наприклад: 20.12.2025" required>
-                </div>
-                <div class="form-group">
-                    <label for="eventLocation">Місце:</label>
-                    <input type="text" id="eventLocation" required>
-                </div>
-                <div class="form-group">
-                    <label for="eventDesc">Опис:</label>
-                    <textarea id="eventDesc" rows="4" required></textarea>
-                </div>
-                <button type="submit" class="submit-btn" id="eventBtn">Додати Подію</button>
-            </form>
-            
-            <div class="section-separator"></div>
-
-            <h2>Управління Подіями</h2>
-            <div id="eventsList">
-                <p>Завантаження...</p>
-            </div>
-        </div>
-
-        <div id="tournaments-content" class="content">
-            <h2>Налаштування Турнірів</h2>
-            <form id="tournaments-form">
-                <h3>Поточний Турнір</h3>
-                <div class="form-group">
-                    <label for="currentTitle">Заголовок:</label>
-                    <input type="text" id="currentTitle" placeholder="Наприклад: Зимова Першість 2025">
-                </div>
-                <div class="form-group">
-                    <label for="currentLink">Посилання на результати (URL):</label>
-                    <input type="url" id="currentLink" placeholder="Наприклад: https://chess-results.com/xxx">
-                </div>
-                
-                <div class="section-separator"></div>
-
-                <h3>Результати Минулого Тижня</h3>
-                <div class="form-group">
-                    <label for="lastWeekResults">Текстові результати:</label>
-                    <textarea id="lastWeekResults" rows="5" placeholder="Наприклад: Переможець: Іваненко С. (5/5). Друге місце: Петренко А. (4/5)"></textarea>
-                </div>
-
-                <button type="submit" class="submit-btn" id="tournamentsBtn">Зберегти Налаштування</button>
-            </form>
-        </div>
-
-        <div id="sheets-config-content" class="content">
-            <h2>Налаштування Списку Гурка</h2>
-            <form id="sheets-config-form">
-                <p>Вставте посилання на Google Таблицю з учасниками (перша колонка - Ім'я, друга - Рейтинг).</p>
-                <div class="form-group">
-                    <label for="sheetsUrl">Посилання на Google Sheets (URL):</label>
-                    <input type="url" id="sheetsUrl" required>
-                </div>
-                <button type="submit" class="submit-btn" id="sheetsConfigBtn">Зберегти та Перевірити</button>
-                <p id="sheetsConfigStatus" style="margin-top: 10px;"></p>
-            </form>
-        </div>
-    </div>
+    <div id="app"></div>
 
     <script>
         // ✅ ВАША АКТУАЛЬНА АДРЕСА RENDER
         const API_URL = 'https://chess-2pyz.onrender.com/api'; 
         const AUTH_KEY = 'chess_admin_auth';
-        let ADMIN_PASSWORD = '';
+        let ADMIN_PASSWORD = ''; // Пароль буде зберігатися тут після входу
 
-        // --- Допоміжні функції ---
+        let isLoggedIn = false;
+        let newsData = [];
+        let homeworkData = [];
+        let eventsData = [];
+        let sheetsConfig = {};
+        let tournamentsConfig = {};
 
-        function showAlert(message, type = 'success') {
-            const box = document.getElementById('alertBox');
-            box.textContent = message;
-            box.className = `alert ${type}`;
-            box.style.display = 'block';
-            setTimeout(() => {
-                box.style.display = 'none';
-            }, 5000);
+        // --- Функції рендерингу ---
+
+        function render() {
+            const app = document.getElementById('app');
+            
+            if (isAuthenticated()) {
+                // Витягуємо пароль з localStorage, якщо він є
+                ADMIN_PASSWORD = localStorage.getItem('admin_pass');
+                app.innerHTML = renderAdminPanel();
+                loadAdminData(); 
+                showTab('news-tab'); // Показуємо вкладку "Новини" за замовчуванням
+            } else {
+                app.innerHTML = renderLogin();
+            }
         }
 
-        function disableButton(id, text = 'Зачекайте...') {
-            const btn = document.getElementById(id);
-            btn.textContent = text;
-            btn.disabled = true;
+        function renderLogin() {
+            return `
+                <div class="header">
+                    <h1>🔐 Адмін-панель</h1>
+                    <p>Шаховий Гурток - Панель керування</p>
+                </div>
+                <div class="login-container">
+                    <h2 class="login-title">Вхід для тренера</h2>
+                    <div id="loginAlert"></div>
+                    <div class="form-group">
+                        <label class="form-label">Пароль</label>
+                        <input type="password" id="adminPassword" class="input" placeholder="Введіть пароль" onkeypress="if(event.key==='Enter') login()">
+                    </div>
+                    <button class="btn" onclick="login()">Увійти</button>
+                </div>
+            `;
         }
 
-        function enableButton(id, text) {
-            const btn = document.getElementById(id);
-            btn.textContent = text;
-            btn.disabled = false;
+        function renderAdminPanel() {
+            return `
+                <div class="header">
+                    <h1>⚙️ Адмін-панель</h1>
+                    <p>Керування контентом сайту</p>
+                    <button class="logout-btn" onclick="logout()">Вийти</button>
+                </div>
+                <div class="container">
+                    <div id="alerts"></div>
+
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="showTab('news-tab')">Новини / ДЗ</button>
+                        <button class="tab-btn" onclick="showTab('events-tab')">Події</button>
+                        <button class="tab-btn" onclick="showTab('tournaments-tab')">Турніри</button>
+                        <button class="tab-btn" onclick="showTab('sheets-tab')">Google Sheets</button>
+                    </div>
+
+                    <div id="news-tab" class="tab-content active">
+                        <div class="section">
+                            <h2 class="section-title">📰 Додати новину</h2>
+                            <div id="news-form-container">
+                                ${renderNewsForm()}
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h2 class="section-title">🗑️ Керування новинами</h2>
+                            <div id="newsList">Завантаження новин...</div>
+                        </div>
+                        
+                        <div class="section">
+                            <h2 class="section-title">📚 Додати домашнє завдання</h2>
+                            <div id="homework-form-container">
+                                ${renderHomeworkForm()}
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <h2 class="section-title">🗑️ Керування завданнями</h2>
+                            <div id="homeworkList">Завантаження завдань...</div>
+                        </div>
+                    </div>
+
+                    <div id="events-tab" class="tab-content">
+                        <div class="section">
+                            <h2 class="section-title">📅 Додати подію</h2>
+                            <div id="events-form-container">
+                                ${renderEventsForm()}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h2 class="section-title">🗑️ Керування подіями</h2>
+                            <div id="eventsList">Завантаження подій...</div>
+                        </div>
+                    </div>
+
+                    <div id="tournaments-tab" class="tab-content">
+                        <div class="section">
+                            <h2 class="section-title">🏆 Оновити турнір</h2>
+                            <div id="tournaments-form-container">
+                                ${renderTournamentsForm()}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h2 class="section-title">ℹ️ Поточна інформація про турніри</h2>
+                            <div id="tournamentsCurrentConfig">Завантаження...</div>
+                        </div>
+                    </div>
+
+                    <div id="sheets-tab" class="tab-content">
+                        <div class="section">
+                            <h2 class="section-title">👥 Налаштування Google Таблиці</h2>
+                            <div id="sheets-config-container">
+                                ${renderSheetsConfigForm()}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h2 class="section-title">ℹ️ Поточні налаштування Sheets</h2>
+                            <div class="current-setting" id="sheetsCurrentConfig">
+                                Завантаження поточної конфігурації...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
+        // --- Рендеринг форм (Виділено для чистоти коду) ---
+
+        function renderNewsForm() {
+            return `
+                <form id="news-form">
+                    <div class="form-group">
+                        <label class="form-label">Заголовок новини</label>
+                        <input type="text" id="newsTitle" class="input" placeholder="Наприклад: Іван Петренко отримав 1 розряд!" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Опис новини</label>
+                        <textarea id="newsDesc" class="input textarea" placeholder="Розкажіть детальніше про подію..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Фото</label>
+                        <div class="file-input-wrapper">
+                            <label class="file-input-label" for="newsImage">
+                                📸 Натисніть для вибору фото
+                            </label>
+                            <input type="file" id="newsImage" accept="image/*" onchange="previewImage(this, 'newsPreview')">
+                        </div>
+                        <img id="newsPreview" class="preview-image">
+                    </div>
+                    <button type="submit" class="btn" id="newsBtn">Опублікувати новину</button>
+                </form>
+            `;
+        }
+
+        function renderHomeworkForm() {
+            return `
+                <form id="homework-form">
+                    <div class="form-group">
+                        <label class="form-label">Назва завдання</label>
+                        <input type="text" id="hwTitle" class="input" placeholder="Наприклад: Завдання на тиждень 15-21 листопада" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Зображення завдання</label>
+                        <div class="info-box">
+                            ℹ️ Завантажте зображення з шаховою позицією або задачею
+                        </div>
+                        <div class="file-input-wrapper">
+                            <label class="file-input-label" for="hwImage">
+                                📸 Натисніть для вибору зображення
+                            </label>
+                            <input type="file" id="hwImage" accept="image/*" onchange="previewImage(this, 'hwPreview')" required>
+                        </div>
+                        <img id="hwPreview" class="preview-image">
+                    </div>
+                    <button type="submit" class="btn" id="hwBtn">Додати завдання</button>
+                </form>
+            `;
+        }
+        
+        function renderEventsForm() {
+            return `
+                <form id="events-form">
+                    <div class="form-group">
+                        <label class="form-label">Назва події</label>
+                        <input type="text" id="eventTitle" class="input" placeholder="Наприклад: Відкритий турнір Львівської області" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Дата проведення</label>
+                        <input type="text" id="eventDate" class="input" placeholder="Наприклад: 20-21 листопада 2025" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Місце проведення</label>
+                        <input type="text" id="eventLocation" class="input" placeholder="Наприклад: Палац спорту, вул. Городоцька 120" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Опис події</label>
+                        <textarea id="eventDesc" class="input textarea" placeholder="Детальна інформація про подію..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn" id="eventBtn">Додати подію</button>
+                </form>
+            `;
+        }
+        
+        function renderTournamentsForm() {
+            return `
+                <form id="tournaments-form">
+                    <div class="form-group">
+                        <label class="form-label">Назва поточного турніру</label>
+                        <input type="text" id="tournTitle" class="input" placeholder="Наприклад: Турнір вихідного дня">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Посилання на турнір</label>
+                        <input type="text" id="tournLink" class="input" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Результати минулого тижня</label>
+                        <textarea id="tournResults" class="input textarea" placeholder="1 місце - Іван Петренко
+2 місце - Марія Іваненко..."></textarea>
+                    </div>
+                    <button type="submit" class="btn" id="tournBtn">Оновити турнір</button>
+                </form>
+            `;
+        }
+
+        function renderSheetsConfigForm() {
+             return `
+                <form id="sheets-config-form">
+                    <div class="info-box">
+                        <strong>📋 Інструкція:</strong><br>
+                        1. Створіть Google Таблицю з двома колонками: "Ім'я" та "Розряд" або "Рейтинг"<br>
+                        2. Налаштуйте доступ: Файл → Надати доступ → **Будь-хто з посиланням може переглядати**<br>
+                        3. Скопіюйте посилання на таблицю і вставте нижче
+                    </div>
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label class="form-label">Посилання на Google Таблицю</label>
+                        <input type="url" id="sheetsUrl" class="input" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                    </div>
+                    <button type="submit" class="btn btn-success" id="sheetsBtn">Зберегти налаштування</button>
+                </form>
+            `;
+        }
+
+
+        // --- Логіка та API виклики ---
+
+        function isAuthenticated() {
+            // Перевіряємо, чи встановлено прапорець і чи є пароль
+            return localStorage.getItem(AUTH_KEY) === 'true' && localStorage.getItem('admin_pass') !== null;
+        }
+        
         function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
+
+            document.getElementById(tabName).classList.add('active');
+            // Знаходимо кнопку, яка відповідає цій вкладці, та робимо її активною
             const targetButton = document.querySelector(`.tab-btn[onclick="showTab('${tabName}')"]`);
-            if(targetButton) {
+            if (targetButton) {
                 targetButton.classList.add('active');
             }
-            
-            document.querySelectorAll('.content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(tabName).classList.add('active');
             window.scrollTo(0, 0);
         }
 
-        // --- Автентифікація ---
+        function showAlert(message, type = 'success') {
+            const alertsDiv = document.getElementById('alerts');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            const icon = type === 'success' ? '✅' : '❌';
+            
+            alertsDiv.innerHTML = `<div class="alert ${alertClass}">${icon} ${message}</div>`;
+            document.querySelector('.alert').style.display = 'block';
+            
+            setTimeout(() => {
+                document.querySelector('.alert').style.display = 'none';
+            }, 5000);
 
-        function isAuthenticated() {
-            return localStorage.getItem(AUTH_KEY) === 'true';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function render() {
-            if (isAuthenticated()) {
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('admin-panel').style.display = 'block';
-                document.getElementById('logoutBtn').style.display = 'block';
-                loadAllLists();
-                loadConfigs();
-                showTab('news-content');
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            const file = input.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
             } else {
-                document.getElementById('login-container').style.display = 'block';
-                document.getElementById('admin-panel').style.display = 'none';
-                document.getElementById('logoutBtn').style.display = 'none';
+                 preview.style.display = 'none';
             }
         }
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        function disableButton(btnId, text = 'Зачекайте...') {
+            const btn = document.getElementById(btnId);
+            btn.disabled = true;
+            btn.textContent = text;
+        }
+
+        function enableButton(btnId, text) {
+            const btn = document.getElementById(btnId);
+            btn.disabled = false;
+            btn.textContent = text;
+        }
+
+
+        // --- Автентифікація ---
+
+        async function login() {
             const inputPassword = document.getElementById('adminPassword').value;
+            const alertDiv = document.getElementById('loginAlert');
+            
+            if (!inputPassword) return;
 
-            disableButton('loginBtn');
+            disableButton('loginBtn', 'Перевірка...');
 
+            // Використовуємо POST-запит до /news для перевірки пароля
             try {
-                const response = await fetch(`${API_URL}/news`, {
+                 const response = await fetch(`${API_URL}/news`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         password: inputPassword,
-                        title: '', 
-                        description: ''
+                        title: 'TEST_AUTH', 
+                        description: 'TEST_AUTH'
                     })
                 });
 
                 if (response.status === 401) {
-                    showAlert('Невірний пароль!', 'error');
-                } else if (response.ok) {
+                    alertDiv.innerHTML = '<div class="alert alert-error">❌ Невірний пароль!</div>';
+                } else if (response.ok || response.status === 400) { // 400 може бути, якщо ми не надали зображення
+                    
+                    // Пароль вірний. Видаляємо тестовий запис, якщо він був створений.
+                    if(response.ok) {
+                         const result = await response.json();
+                         if (result._id) {
+                            await fetch(`${API_URL}/news/${result._id}`, {
+                                method: 'DELETE',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ password: inputPassword })
+                            });
+                         }
+                    }
+
                     ADMIN_PASSWORD = inputPassword;
                     localStorage.setItem(AUTH_KEY, 'true');
                     localStorage.setItem('admin_pass', inputPassword);
-                    showAlert('Вхід успішний!');
                     render();
+                    showAlert('Вхід успішний!', 'success');
                 } else {
                     const errorData = await response.json();
-                    showAlert(errorData.error || 'Помилка автентифікації', 'error');
+                    alertDiv.innerHTML = `<div class="alert alert-error">Помилка: ${errorData.error || 'Незрозуміла помилка'}</div>`;
                 }
             } catch (error) {
-                showAlert('Помилка з\'єднання з сервером. Перевірте консоль браузера.', 'error');
+                alertDiv.innerHTML = '<div class="alert alert-error">Помилка з\'єднання з сервером.</div>';
                 console.error('Помилка входу:', error);
             } finally {
                 enableButton('loginBtn', 'Увійти');
+                document.getElementById('adminPassword').value = '';
             }
-        });
-        
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem(AUTH_KEY);
-            localStorage.removeItem('admin_pass');
-            ADMIN_PASSWORD = '';
-            render();
-            showAlert('Ви вийшли.');
-        });
-        
-        if (localStorage.getItem('admin_pass')) {
-             ADMIN_PASSWORD = localStorage.getItem('admin_pass');
+        }
+
+        function logout() {
+            if (confirm('Ви впевнені, що хочете вийти?')) {
+                localStorage.removeItem(AUTH_KEY);
+                localStorage.removeItem('admin_pass');
+                ADMIN_PASSWORD = '';
+                render();
+                showAlert('Ви успішно вийшли.', 'success');
+            }
         }
 
         // --- Завантаження даних ---
@@ -422,36 +731,48 @@
                 if (!response.ok) throw new Error('Помилка мережі або сервера.');
                 const data = await response.json();
                 renderFunction(data);
+                return data;
             } catch (error) {
-                document.getElementById(listId).innerHTML = `<p style="color: red;">Помилка завантаження: ${error.message}</p>`;
+                document.getElementById(listId).innerHTML = `<div class="alert alert-error" style="display: block;">Помилка завантаження: ${error.message}</div>`;
+                return [];
             }
         }
 
-        function loadAllLists() {
-            loadList('/news', 'newsList', renderNewsList);
-            loadList('/homework', 'homeworkList', renderHomeworkList);
-            loadList('/events', 'eventsList', renderEventsList);
+        async function loadAdminData() {
+            // Завантажуємо списки
+            newsData = await loadList('/news', 'newsList', renderNewsList);
+            homeworkData = await loadList('/homework', 'homeworkList', renderHomeworkList);
+            eventsData = await loadList('/events', 'eventsList', renderEventsList);
+
+            // Завантажуємо конфігурації
+            await loadConfigs();
         }
 
         async function loadConfigs() {
             try {
                 // 1. Конфігурація турнірів
                 const tournamentResponse = await fetch(`${API_URL}/tournaments`);
-                const tData = await tournamentResponse.json();
-                document.getElementById('currentTitle').value = tData.current?.title || '';
-                document.getElementById('currentLink').value = tData.current?.link || '';
-                document.getElementById('lastWeekResults').value = tData.lastWeek || '';
+                tournamentsConfig = await tournamentResponse.json();
+                renderTournamentsConfig(); 
+                
+                // Заповнення форми
+                document.getElementById('tournTitle').value = tournamentsConfig.current?.title || '';
+                document.getElementById('tournLink').value = tournamentsConfig.current?.link || '';
+                document.getElementById('tournResults').value = tournamentsConfig.lastWeek || '';
             } catch (error) {
-                 showAlert('Помилка завантаження конфігурації турнірів', 'error');
+                 document.getElementById('tournamentsCurrentConfig').innerHTML = `<div class="alert alert-error" style="display: block;">Помилка завантаження конфігурації турнірів.</div>`;
             }
-             try {
+            
+            try {
                 // 2. Конфігурація Google Sheets
                 const sheetsResponse = await fetch(`${API_URL}/sheets-config`);
-                const sData = await sheetsResponse.json();
-                document.getElementById('sheetsUrl').value = sData.url || '';
-                document.getElementById('sheetsConfigStatus').textContent = sData.url ? 'Збережено посилання.' : 'Посилання не встановлено.';
+                sheetsConfig = await sheetsResponse.json();
+                renderSheetsConfig();
+
+                // Заповнення форми
+                document.getElementById('sheetsUrl').value = sheetsConfig.url || '';
             } catch (error) {
-                 showAlert('Помилка завантаження конфігурації Google Sheets', 'error');
+                 document.getElementById('sheetsCurrentConfig').innerHTML = `<div class="alert alert-error" style="display: block;">Помилка завантаження конфігурації Google Sheets.</div>`;
             }
         }
 
@@ -460,13 +781,16 @@
         function renderNewsList(data) {
             const list = document.getElementById('newsList');
             if (data.length === 0) {
-                list.innerHTML = '<p>Новин немає.</p>';
+                list.innerHTML = '<p style="color: #7f8c8d;">Новин поки немає.</p>';
                 return;
             }
             list.innerHTML = data.map(post => `
-                <div class="list-item">
-                    <span>${post.title} (${new Date(post.date).toLocaleDateString('uk-UA')})</span>
-                    <button class="delete-btn" onclick="deleteItem('/news', '${post._id}')">Видалити</button>
+                <div class="content-item">
+                    <div class="content-details">
+                        <div class="item-title">${post.title}</div>
+                        <div class="item-meta">ID: ${post._id} | Дата: ${new Date(post.date).toLocaleDateString('uk-UA')}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteItem('/news', '${post._id}', loadList.bind(null, '/news', 'newsList', renderNewsList))">Видалити</button>
                 </div>
             `).join('');
         }
@@ -474,13 +798,16 @@
         function renderHomeworkList(data) {
             const list = document.getElementById('homeworkList');
             if (data.length === 0) {
-                list.innerHTML = '<p>Завдань немає.</p>';
+                list.innerHTML = '<p style="color: #7f8c8d;">Завдань поки немає.</p>';
                 return;
             }
             list.innerHTML = data.map(hw => `
-                <div class="list-item">
-                    <span>${hw.title}</span>
-                    <button class="delete-btn" onclick="deleteItem('/homework', '${hw._id}')">Видалити</button>
+                <div class="content-item">
+                    <div class="content-details">
+                        <div class="item-title">${hw.title}</div>
+                        <div class="item-meta">ID: ${hw._id}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteItem('/homework', '${hw._id}', loadList.bind(null, '/homework', 'homeworkList', renderHomeworkList))">Видалити</button>
                 </div>
             `).join('');
         }
@@ -488,20 +815,49 @@
         function renderEventsList(data) {
              const list = document.getElementById('eventsList');
             if (data.length === 0) {
-                list.innerHTML = '<p>Подій немає.</p>';
+                list.innerHTML = '<p style="color: #7f8c8d;">Подій поки немає.</p>';
                 return;
             }
             list.innerHTML = data.map(event => `
-                <div class="list-item">
-                    <span>${event.title} (${event.date})</span>
-                    <button class="delete-btn" onclick="deleteItem('/events', '${event._id}')">Видалити</button>
+                <div class="content-item">
+                    <div class="content-details">
+                        <div class="item-title">${event.title}</div>
+                        <div class="item-meta">${event.date}, ${event.location} | ID: ${event._id}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteItem('/events', '${event._id}', loadList.bind(null, '/events', 'eventsList', renderEventsList))">Видалити</button>
                 </div>
             `).join('');
+        }
+        
+        function renderSheetsConfig() {
+            const configDiv = document.getElementById('sheetsCurrentConfig');
+            if (sheetsConfig.url) {
+                configDiv.innerHTML = `
+                    <strong>Поточне посилання:</strong> 
+                    <a href="${sheetsConfig.url}" target="_blank">${sheetsConfig.url.substring(0, 80)}...</a>
+                `;
+            } else {
+                configDiv.innerHTML = '<strong>Поточне посилання:</strong> Не встановлено';
+            }
+        }
+
+        function renderTournamentsConfig() {
+            const configDiv = document.getElementById('tournamentsCurrentConfig');
+            
+            let current = tournamentsConfig.current ? 
+                `<strong>Поточний турнір:</strong> <a href="${tournamentsConfig.current.link}" target="_blank">${tournamentsConfig.current.title}</a>` :
+                '<strong>Поточний турнір:</strong> Немає';
+                
+            let lastWeek = tournamentsConfig.lastWeek ? 
+                `<strong>Результати минулого тижня:</strong> <pre style="white-space: pre-wrap; margin: 0; font-family: inherit;">${tournamentsConfig.lastWeek.substring(0, 200)}...</pre>` :
+                '<strong>Результати минулого тижня:</strong> Немає';
+
+            configDiv.innerHTML = `<div class="current-setting">${current}<hr style="margin: 10px 0; border: 0; border-top: 1px solid #e0e0e0;">${lastWeek}</div>`;
         }
 
         // --- Функції видалення ---
 
-        async function deleteItem(endpoint, id) {
+        async function deleteItem(endpoint, id, reloadFunction) {
             if (!confirm('Ви впевнені, що хочете видалити цей елемент?')) return;
 
             try {
@@ -514,8 +870,8 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    showAlert('Успішно видалено!');
-                    loadAllLists();
+                    showAlert('Успішно видалено!', 'success');
+                    reloadFunction();
                 } else {
                     showAlert(result.error || 'Помилка видалення', 'error');
                 }
@@ -524,15 +880,33 @@
             }
         }
 
-        // --- Форми POST ---
+        // --- Форми POST (Обробка) ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Додаємо обробники подій для форм після їх рендерингу
+            
+            document.getElementById('app').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formId = e.target.id;
+                
+                if (formId === 'news-form') return publishNews(e);
+                if (formId === 'homework-form') return publishHomework(e);
+                if (formId === 'events-form') return publishEvent(e);
+                if (formId === 'tournaments-form') return publishTournament(e);
+                if (formId === 'sheets-config-form') return saveSheets(e);
+            });
+            
+             // Ініціалізація
+            render();
+        });
 
-        // 1. Новини
-        document.getElementById('news-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('newsTitle').value;
-            const description = document.getElementById('newsDesc').value;
-            const imageFile = document.getElementById('newsImage').files[0];
 
+        async function publishNews(e) {
+            const title = document.getElementById('newsTitle').value.trim();
+            const description = document.getElementById('newsDesc').value.trim();
+            const imageInput = document.getElementById('newsImage');
+            
             if (!title || !description) {
                 showAlert('Заповніть всі текстові поля!', 'error');
                 return;
@@ -544,8 +918,9 @@
             formData.append('title', title);
             formData.append('description', description);
             formData.append('password', ADMIN_PASSWORD);
-            if (imageFile) {
-                formData.append('image', imageFile);
+            
+            if (imageInput.files[0]) {
+                formData.append('image', imageInput.files[0]);
             }
 
             try {
@@ -557,36 +932,35 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    showAlert('Новину успішно додано!');
-                    document.getElementById('news-form').reset();
-                    loadAllLists();
+                    showAlert('Новину успішно опубліковано!');
+                    e.target.reset();
+                    document.getElementById('newsPreview').style.display = 'none';
+                    await loadList('/news', 'newsList', renderNewsList);
                 } else {
-                    showAlert(result.error || 'Помилка додавання', 'error');
+                    showAlert(result.error || 'Помилка публікації', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             } finally {
-                enableButton('newsBtn', 'Додати Новину');
+                enableButton('newsBtn', 'Опублікувати новину');
             }
-        });
+        }
 
-        // 2. Домашнє Завдання
-        document.getElementById('homework-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('homeworkTitle').value;
-            const imageFile = document.getElementById('homeworkImage').files[0];
-
-            if (!title || !imageFile) {
-                showAlert('Заповніть поле та завантажте зображення!', 'error');
+        async function publishHomework(e) {
+            const title = document.getElementById('hwTitle').value.trim();
+            const imageInput = document.getElementById('hwImage');
+            
+            if (!title || !imageInput.files[0]) {
+                showAlert('Заповніть назву та оберіть зображення!', 'error');
                 return;
             }
 
-            disableButton('homeworkBtn');
+            disableButton('hwBtn');
 
             const formData = new FormData();
             formData.append('title', title);
             formData.append('password', ADMIN_PASSWORD);
-            formData.append('image', imageFile);
+            formData.append('image', imageInput.files[0]);
 
             try {
                 const response = await fetch(`${API_URL}/homework`, {
@@ -598,26 +972,25 @@
 
                 if (response.ok) {
                     showAlert('Завдання успішно додано!');
-                    document.getElementById('homework-form').reset();
-                    loadAllLists();
+                    e.target.reset();
+                    document.getElementById('hwPreview').style.display = 'none';
+                    await loadList('/homework', 'homeworkList', renderHomeworkList);
                 } else {
                     showAlert(result.error || 'Помилка додавання', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             } finally {
-                enableButton('homeworkBtn', 'Додати Завдання');
+                enableButton('hwBtn', 'Додати завдання');
             }
-        });
+        }
 
-        // 3. Події
-        document.getElementById('event-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('eventTitle').value;
-            const date = document.getElementById('eventDate').value;
-            const location = document.getElementById('eventLocation').value;
-            const description = document.getElementById('eventDesc').value;
-
+        async function publishEvent(e) {
+            const title = document.getElementById('eventTitle').value.trim();
+            const date = document.getElementById('eventDate').value.trim();
+            const location = document.getElementById('eventLocation').value.trim();
+            const description = document.getElementById('eventDesc').value.trim();
+            
             if (!title || !date || !location || !description) {
                 showAlert('Заповніть всі поля!', 'error');
                 return;
@@ -638,8 +1011,8 @@
 
                 if (response.ok) {
                     showAlert('Подію успішно додано!');
-                    document.getElementById('event-form').reset();
-                    loadAllLists();
+                    e.target.reset();
+                    await loadList('/events', 'eventsList', renderEventsList);
                 } else {
                     showAlert(result.error || 'Помилка додавання', 'error');
                 }
@@ -648,16 +1021,14 @@
             } finally {
                 enableButton('eventBtn', 'Додати подію');
             }
-        });
+        }
 
-        // 4. Турніри
-        document.getElementById('tournaments-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const currentTitle = document.getElementById('currentTitle').value;
-            const currentLink = document.getElementById('currentLink').value;
-            const lastWeekResults = document.getElementById('lastWeekResults').value;
+        async function publishTournament(e) {
+            const currentTitle = document.getElementById('tournTitle').value.trim();
+            const currentLink = document.getElementById('tournLink').value.trim();
+            const lastWeekResults = document.getElementById('tournResults').value.trim();
 
-            disableButton('tournamentsBtn');
+            disableButton('tournBtn');
 
             try {
                 const response = await fetch(`${API_URL}/tournaments`, {
@@ -672,59 +1043,54 @@
 
                 if (response.ok) {
                     showAlert('Налаштування турнірів успішно збережено!');
+                    await loadConfigs();
                 } else {
                     showAlert(result.error || 'Помилка збереження', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             } finally {
-                enableButton('tournamentsBtn', 'Зберегти Налаштування');
+                enableButton('tournBtn', 'Оновити турнір');
             }
-        });
+        }
 
-        // 5. Google Sheets
-        document.getElementById('sheets-config-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const url = document.getElementById('sheetsUrl').value;
-            const statusEl = document.getElementById('sheetsConfigStatus');
-
+        async function saveSheets(e) {
+            const url = document.getElementById('sheetsUrl').value.trim();
+            
             if (!url) {
-                statusEl.textContent = 'Вставте посилання.';
+                showAlert('Введіть посилання на Google Таблицю!', 'error');
                 return;
             }
 
-            disableButton('sheetsConfigBtn');
-            statusEl.textContent = 'Перевірка...';
+            if (!url.includes('docs.google.com/spreadsheets')) {
+                showAlert('Невірний формат посилання! Повинно починатися з https://docs.google.com/spreadsheets...', 'error');
+                return;
+            }
+
+            disableButton('sheetsBtn');
 
             try {
                 const response = await fetch(`${API_URL}/sheets-config`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        url, password: ADMIN_PASSWORD
-                    })
+                    body: JSON.stringify({ url, password: ADMIN_PASSWORD })
                 });
 
                 const result = await response.json();
 
                 if (response.ok) {
-                    statusEl.textContent = 'Успіх! Посилання підключено.';
-                    showAlert('Посилання Google Sheets успішно підключено.');
+                    showAlert('Посилання Google Sheets успішно підключено та збережено!');
+                    await loadConfigs(); 
                 } else {
-                    statusEl.textContent = `Помилка: ${result.error}`;
-                    showAlert(result.error || 'Помилка підключення', 'error');
+                    showAlert(result.error || 'Помилка підключення/збереження', 'error');
                 }
             } catch (error) {
-                 statusEl.textContent = 'Помилка з\'єднання з сервером.';
                  showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             } finally {
-                enableButton('sheetsConfigBtn', 'Зберегти та Перевірити');
+                enableButton('sheetsBtn', 'Зберегти налаштування');
             }
-        });
+        }
 
-
-        // Ініціалізація
-        render();
     </script>
 </body>
 </html>
