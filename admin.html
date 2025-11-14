@@ -5,215 +5,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Адмін-панель</title>
     <style>
-        * {
+        /* Мінімалістичні стилі для повернення до базового вигляду */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #ecf0f1;
-            color: #333;
-        }
-
         .header {
-            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-            color: #fff;
-            padding: 2rem;
+            background-color: #333; /* Темний заголовок */
+            color: white;
+            padding: 15px 20px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             position: relative;
         }
-
         .header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
         }
-
-        .logout-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(255,255,255,0.2);
-            color: #fff;
-            border: 2px solid #fff;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.4);
-        }
-
         .container {
-            max-width: 900px;
+            width: 90%;
+            max-width: 800px;
             margin: 20px auto;
+            background-color: white;
             padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #ccc;
         }
-
+        /* Стилі для вкладок */
         .tabs {
-            margin-bottom: -1px; /* Для візуального злиття з контентом */
             display: flex;
-            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc;
         }
-        
         .tab-btn {
-            background: #34495e;
-            color: #fff;
-            border: none;
+            background: #eee;
+            color: #333;
+            border: 1px solid #ccc;
+            border-bottom: none;
             padding: 10px 15px;
             cursor: pointer;
             font-size: 1rem;
-            border-radius: 5px 5px 0 0;
             margin-right: 5px;
+            border-radius: 5px 5px 0 0;
             transition: background 0.3s;
         }
-
         .tab-btn.active {
-            background: #e74c3c;
+            background: #fff;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            border-bottom: 1px solid #fff;
         }
-
         .content {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-top: none;
             display: none;
+            padding: 15px 0;
         }
-
         .content.active {
             display: block;
         }
-
         h2 {
-            color: #2c3e50;
-            border-bottom: 2px solid #34495e;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
         }
-
         .form-group {
             margin-bottom: 15px;
         }
-
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: #34495e;
         }
-
         input[type="text"], 
         input[type="file"],
         input[type="password"],
         input[type="url"],
         textarea {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 3px;
             box-sizing: border-box;
             font-size: 1rem;
         }
-
-        textarea {
-            resize: vertical;
-        }
-
         button.submit-btn {
-            background: #2ecc71;
+            background: #28a745; /* Зелений колір */
             color: #fff;
-            padding: 12px 20px;
+            padding: 10px 15px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 1rem;
             transition: background 0.3s;
         }
-
         button.submit-btn:hover:not(:disabled) {
-            background: #27ae60;
+            background: #218838;
         }
-        
-        button:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-        }
-
-        .list-item {
-            background: #f9f9f9;
-            border: 1px solid #eee;
-            padding: 10px;
-            margin-bottom: 10px;
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
             border-radius: 4px;
+            cursor: pointer;
+        }
+        .list-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 3px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .delete-btn {
-            background: #e74c3c;
+            background: #dc3545;
             color: #fff;
             border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+            padding: 5px 8px;
+            border-radius: 3px;
             cursor: pointer;
-            transition: background 0.3s;
         }
-
-        .delete-btn:hover {
-            background: #c0392b;
-        }
-
         .alert {
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
             border-radius: 4px;
-            font-weight: bold;
-            display: none; /* Hide by default */
+            display: none;
         }
-
-        .alert.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+        .alert.success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .alert.error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
 
         #login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
             max-width: 400px;
             margin: 50px auto;
-            padding: 30px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            background: white;
+            border: 1px solid #ccc;
         }
-
         .section-separator {
             border-bottom: 1px dashed #ccc;
             margin: 20px 0;
             padding-bottom: 10px;
-        }
-
-        .list-container {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #eee;
-            padding: 10px;
         }
     </style>
 </head>
@@ -228,7 +163,7 @@
 
     <div id="login-container">
         <form id="login-form">
-            <h2>Вхід до адмін-панелі</h2>
+            <h2>Вхід</h2>
             <div class="form-group">
                 <label for="adminPassword">Пароль:</label>
                 <input type="password" id="adminPassword" required>
@@ -267,13 +202,13 @@
             <div class="section-separator"></div>
 
             <h2>Управління Новинами</h2>
-            <div id="newsList" class="list-container">
+            <div id="newsList">
                 <p>Завантаження...</p>
             </div>
         </div>
 
         <div id="homework-content" class="content">
-            <h2>Додати Домашнє Завдання (Зображення)</h2>
+            <h2>Додати Домашнє Завдання</h2>
             <form id="homework-form">
                 <div class="form-group">
                     <label for="homeworkTitle">Коментар/Тема:</label>
@@ -289,7 +224,7 @@
             <div class="section-separator"></div>
 
             <h2>Управління ДЗ</h2>
-            <div id="homeworkList" class="list-container">
+            <div id="homeworkList">
                 <p>Завантаження...</p>
             </div>
         </div>
@@ -319,7 +254,7 @@
             <div class="section-separator"></div>
 
             <h2>Управління Подіями</h2>
-            <div id="eventsList" class="list-container">
+            <div id="eventsList">
                 <p>Завантаження...</p>
             </div>
         </div>
@@ -364,7 +299,7 @@
     </div>
 
     <script>
-        // ✅ ВАША АДРЕСА RENDER
+        // ✅ ВАША АКТУАЛЬНА АДРЕСА RENDER
         const API_URL = 'https://chess-2pyz.onrender.com/api'; 
         const AUTH_KEY = 'chess_admin_auth';
         let ADMIN_PASSWORD = '';
@@ -397,7 +332,6 @@
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            // Знаходимо кнопку за її атрибутом onclick
             const targetButton = document.querySelector(`.tab-btn[onclick="showTab('${tabName}')"]`);
             if(targetButton) {
                 targetButton.classList.add('active');
@@ -407,7 +341,7 @@
                 content.classList.remove('active');
             });
             document.getElementById(tabName).classList.add('active');
-            window.scrollTo(0, 0); // Прокрутка на початок
+            window.scrollTo(0, 0);
         }
 
         // --- Автентифікація ---
@@ -423,10 +357,7 @@
                 document.getElementById('logoutBtn').style.display = 'block';
                 loadAllLists();
                 loadConfigs();
-                // Активуємо першу вкладку
                 showTab('news-content');
-                document.querySelector('.tab-btn').classList.add('active');
-
             } else {
                 document.getElementById('login-container').style.display = 'block';
                 document.getElementById('admin-panel').style.display = 'none';
@@ -441,13 +372,11 @@
             disableButton('loginBtn');
 
             try {
-                // Використовуємо POST-запит для перевірки пароля, надсилаючи його на POST-ендпоінт
                 const response = await fetch(`${API_URL}/news`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         password: inputPassword,
-                        // Надсилаємо порожні дані, оскільки цей ендпоінт вимагає пароль
                         title: '', 
                         description: ''
                     })
@@ -456,19 +385,16 @@
                 if (response.status === 401) {
                     showAlert('Невірний пароль!', 'error');
                 } else if (response.ok) {
-                    // Якщо успіх (200 OK), то зберігаємо пароль для подальших запитів і входимо
                     ADMIN_PASSWORD = inputPassword;
                     localStorage.setItem(AUTH_KEY, 'true');
-                    localStorage.setItem('admin_pass', inputPassword); // Зберігаємо пароль для запитів
+                    localStorage.setItem('admin_pass', inputPassword);
                     showAlert('Вхід успішний!');
                     render();
                 } else {
-                    // Якщо сервер повернув іншу помилку (наприклад, 400 Bad Request)
                     const errorData = await response.json();
                     showAlert(errorData.error || 'Помилка автентифікації', 'error');
                 }
             } catch (error) {
-                // Виправлено: використано лише один слеш для екранування апострофа
                 showAlert('Помилка з\'єднання з сервером. Перевірте консоль браузера.', 'error');
                 console.error('Помилка входу:', error);
             } finally {
@@ -484,7 +410,6 @@
             showAlert('Ви вийшли.');
         });
         
-        // Перевірка при завантаженні сторінки
         if (localStorage.getItem('admin_pass')) {
              ADMIN_PASSWORD = localStorage.getItem('admin_pass');
         }
@@ -540,7 +465,7 @@
             }
             list.innerHTML = data.map(post => `
                 <div class="list-item">
-                    <span>${post.title} (${post.date})</span>
+                    <span>${post.title} (${new Date(post.date).toLocaleDateString('uk-UA')})</span>
                     <button class="delete-btn" onclick="deleteItem('/news', '${post._id}')">Видалити</button>
                 </div>
             `).join('');
@@ -595,14 +520,13 @@
                     showAlert(result.error || 'Помилка видалення', 'error');
                 }
             } catch (error) {
-                // Виправлено
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             }
         }
 
         // --- Форми POST ---
 
-        // 1. Додавання Новини
+        // 1. Новини
         document.getElementById('news-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const title = document.getElementById('newsTitle').value;
@@ -627,29 +551,26 @@
             try {
                 const response = await fetch(`${API_URL}/news`, {
                     method: 'POST',
-                    body: formData // FormData не вимагає заголовка Content-Type
+                    body: formData
                 });
 
                 const result = await response.json();
 
                 if (response.ok) {
                     showAlert('Новину успішно додано!');
-                    document.getElementById('newsTitle').value = '';
-                    document.getElementById('newsDesc').value = '';
-                    document.getElementById('newsImage').value = '';
+                    document.getElementById('news-form').reset();
                     loadAllLists();
                 } else {
                     showAlert(result.error || 'Помилка додавання', 'error');
                 }
             } catch (error) {
-                // Виправлено
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             } finally {
                 enableButton('newsBtn', 'Додати Новину');
             }
         });
 
-        // 2. Додавання ДЗ
+        // 2. Домашнє Завдання
         document.getElementById('homework-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const title = document.getElementById('homeworkTitle').value;
@@ -677,21 +598,19 @@
 
                 if (response.ok) {
                     showAlert('Завдання успішно додано!');
-                    document.getElementById('homeworkTitle').value = '';
-                    document.getElementById('homeworkImage').value = '';
+                    document.getElementById('homework-form').reset();
                     loadAllLists();
                 } else {
                     showAlert(result.error || 'Помилка додавання', 'error');
                 }
             } catch (error) {
-                // Виправлено
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             } finally {
                 enableButton('homeworkBtn', 'Додати Завдання');
             }
         });
 
-        // 3. Додавання Події
+        // 3. Події
         document.getElementById('event-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const title = document.getElementById('eventTitle').value;
@@ -709,15 +628,9 @@
             try {
                 const response = await fetch(`${API_URL}/events`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        title,
-                        date,
-                        location,
-                        description,
-                        password: ADMIN_PASSWORD
+                        title, date, location, description, password: ADMIN_PASSWORD
                     })
                 });
 
@@ -725,23 +638,19 @@
 
                 if (response.ok) {
                     showAlert('Подію успішно додано!');
-                    document.getElementById('eventTitle').value = '';
-                    document.getElementById('eventDate').value = '';
-                    document.getElementById('eventLocation').value = '';
-                    document.getElementById('eventDesc').value = '';
+                    document.getElementById('event-form').reset();
                     loadAllLists();
                 } else {
                     showAlert(result.error || 'Помилка додавання', 'error');
                 }
             } catch (error) {
-                // Виправлено
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             } finally {
                 enableButton('eventBtn', 'Додати подію');
             }
         });
 
-        // 4. Збереження Налаштувань Турнірів
+        // 4. Турніри
         document.getElementById('tournaments-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const currentTitle = document.getElementById('currentTitle').value;
@@ -755,10 +664,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        currentTitle,
-                        currentLink,
-                        lastWeekResults,
-                        password: ADMIN_PASSWORD
+                        currentTitle, currentLink, lastWeekResults, password: ADMIN_PASSWORD
                     })
                 });
 
@@ -770,14 +676,13 @@
                     showAlert(result.error || 'Помилка збереження', 'error');
                 }
             } catch (error) {
-                // Виправлено
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             } finally {
                 enableButton('tournamentsBtn', 'Зберегти Налаштування');
             }
         });
 
-        // 5. Збереження Google Sheets URL
+        // 5. Google Sheets
         document.getElementById('sheets-config-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const url = document.getElementById('sheetsUrl').value;
@@ -796,8 +701,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        url,
-                        password: ADMIN_PASSWORD
+                        url, password: ADMIN_PASSWORD
                     })
                 });
 
@@ -812,7 +716,6 @@
                 }
             } catch (error) {
                  statusEl.textContent = 'Помилка з\'єднання з сервером.';
-                 // Виправлено
                  showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             } finally {
                 enableButton('sheetsConfigBtn', 'Зберегти та Перевірити');

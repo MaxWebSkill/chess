@@ -5,497 +5,263 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>КЗ ДЮСШ "Дебют"</title>
     <style>
-        * {
+        /* Стилі з найпершої версії для збереження дизайну */
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #fff;
+            background-color: #f4f4f4;
             color: #333;
-            line-height: 1.6;
         }
-
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: #fff;
-            padding: 2rem 1rem;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .nav {
-            background: #34495e;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            transition: height 0.3s ease-in-out;
-            height: 60px; /* Standard height */
-            overflow: hidden;
-        }
-
-        .nav.mobile-open {
-            height: auto;
-        }
-
-        .nav-btn {
-            color: #fff;
-            text-decoration: none;
-            padding: 1rem 1.5rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s, color 0.3s;
-            flex-grow: 1;
-            text-align: center;
-        }
-
-        .nav-btn:hover:not(.active) {
-            background: #2c3e50;
-        }
-
-        .nav-btn.active {
-            background: #e74c3c;
-            font-weight: bold;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .content {
-            display: none;
-            padding-top: 20px;
-        }
-
-        .content.active {
-            display: block;
-        }
-
-        /* Стилі для Новин */
-        .news-post {
-            background: #f4f6f6;
-            border-left: 5px solid #34495e;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .news-title {
-            font-size: 1.5rem;
-            color: #34495e;
-            margin-bottom: 5px;
-        }
-
-        .news-date {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .news-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        /* Стилі для Домашнього Завдання */
-        .homework-item {
-            background: #ecf0f1;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .homework-title {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .homework-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        
-        /* Стилі для Турнірів */
-        .tournament-section {
-            background: #f4f6f6;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            border-left: 5px solid #2980b9;
-        }
-        
-        .tournament-section h2 {
-            color: #2980b9;
-            margin-bottom: 10px;
-            font-size: 1.5rem;
-        }
-        
-        .tournament-link {
-            font-size: 1.1rem;
-            display: block;
-            margin-top: 5px;
-            color: #3498db;
-        }
-        
-        /* Стилі для Списку гуртка */
-        .members-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        .members-table th, .members-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .members-table th {
             background-color: #34495e;
             color: white;
-            font-weight: bold;
-        }
-        
-        .members-table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        /* Стилі для Подій */
-        .event-card {
-            background: #ecf0f1;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border-right: 5px solid #27ae60;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .event-title {
-            font-size: 1.4rem;
-            color: #27ae60;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        
-        .event-info {
-            font-size: 1rem;
-            color: #555;
-        }
-
-        /* Mobile Menu Button */
-        .mobile-menu-btn {
-            display: none;
-            background: #e74c3c;
-            color: #fff;
-            padding: 10px;
+            padding: 15px 0;
             text-align: center;
-            cursor: pointer;
-            font-size: 1.2rem;
         }
-        
-        /* Media Queries for Responsiveness */
-        @media (max-width: 768px) {
-            .nav {
-                flex-direction: column;
-                height: 60px; /* Collapse by default */
-            }
-            
-            .nav.mobile-open {
-                height: auto; /* Expand when active */
-            }
-
-            .nav-btn {
-                padding: 0.8rem 1rem;
-                border-top: 1px solid #2c3e50;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-                position: sticky;
-                top: 0;
-                z-index: 1001;
-            }
-
-            .nav {
-                position: relative;
-                top: auto;
-            }
-            
-            .nav-btn {
-                display: none;
-            }
-            
-            .nav.mobile-open .nav-btn {
-                display: block;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .section h2 {
+            color: #e74c3c;
+            border-bottom: 2px solid #34495e;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .item h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .item p {
+            margin: 5px 0;
+        }
+        .item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .tournament-link {
+            display: block;
+            margin-top: 10px;
+            color: #3498db;
+            font-weight: bold;
+        }
+        .list-group {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+        .loading, .error {
+            text-align: center;
+            padding: 20px;
+            color: #e74c3c;
+        }
+        .member-list {
+            list-style: none;
+            padding: 0;
+        }
+        .member-list li {
+            background: #ecf0f1;
+            margin-bottom: 5px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .member-list span:first-child {
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
+
     <div class="header">
         <h1>КЗ ДЮСШ "Дебют"</h1>
-        <p>Клуб, де народжуються чемпіони</p>
+        <p>Група Волошинського Любомира</p>
     </div>
-
-    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
-        ☰ Меню
-    </div>
-
-    <nav id="mainNav" class="nav">
-        <button class="nav-btn active" onclick="showTab('news-tab')">Новини</button>
-        <button class="nav-btn" onclick="showTab('homework-tab')">Домашнє Завдання</button>
-        <button class="nav-btn" onclick="showTab('events-tab')">Події</button>
-        <button class="nav-btn" onclick="showTab('tournaments-tab')">Турніри</button>
-        <button class="nav-btn" onclick="showTab('members-tab')">Список гуртка</button>
-    </nav>
 
     <div class="container">
-        <div id="news-tab" class="content active">
+        
+        <div class="section" id="members-section">
+            <h2>Склад гуртка та рейтинги</h2>
+            <div id="membersList" class="list-group">
+                <div class="loading">Завантаження складу...</div>
+            </div>
+        </div>
+
+        <div class="section" id="tournaments-section">
+            <h2>Поточний турнір та результати</h2>
+            <div id="currentTournament">
+                <p><strong>Поточний турнір:</strong> <span id="currentTitle">...</span></p>
+                <a href="#" target="_blank" id="currentLink" class="tournament-link" style="display: none;">Переглянути результати онлайн</a>
+            </div>
+            
+            <hr style="margin: 20px 0;">
+            
+            <h3>Результати минулого тижня</h3>
+            <p id="lastWeekResults">... завантаження ...</p>
+        </div>
+
+        <div class="section" id="news-section">
             <h2>Останні Новини</h2>
-            <div id="newsList">
-                <p>Завантаження новин...</p>
+            <div id="newsList" class="list-group">
+                <div class="loading">Завантаження новин...</div>
             </div>
         </div>
 
-        <div id="homework-tab" class="content">
+        <div class="section" id="homework-section">
             <h2>Домашнє Завдання</h2>
-            <div id="homeworkList">
-                <p>Завантаження завдань...</p>
+            <div id="homeworkList" class="list-group">
+                <div class="loading">Завантаження завдань...</div>
             </div>
         </div>
 
-        <div id="events-tab" class="content">
-            <h2>Активні Події</h2>
-            <div id="eventsList">
-                <p>Завантаження подій...</p>
+        <div class="section" id="events-section">
+            <h2>Найближчі Події</h2>
+            <div id="eventsList" class="list-group">
+                <div class="loading">Завантаження подій...</div>
             </div>
         </div>
 
-        <div id="tournaments-tab" class="content">
-            <h2>Турніри та Результати</h2>
-            <div id="tournamentResults">
-                <p>Завантаження інформації про турніри...</p>
-            </div>
-        </div>
-
-        <div id="members-tab" class="content">
-            <h2>Список Учасників Гурка</h2>
-            <div id="membersList">
-                <p>Завантаження списку гуртка...</p>
-            </div>
-        </div>
     </div>
 
     <script>
-        // ✅ ВАША АДРЕСА RENDER
+        // ✅ ВАША АКТУАЛЬНА АДРЕСА API НА RENDER
         const API_URL = 'https://chess-2pyz.onrender.com/api'; 
-        
-        // --- Допоміжні функції для завантаження даних ---
 
-        async function fetchAPI(endpoint) {
+        // --- Допоміжна функція для завантаження даних ---
+        async function loadData(endpoint, listId, renderFunction) {
+            const container = document.getElementById(listId);
+            container.innerHTML = '<div class="loading">Завантаження...</div>';
+
             try {
                 const response = await fetch(`${API_URL}${endpoint}`);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`Помилка: ${response.status}`);
                 }
-                return await response.json();
+                const data = await response.json();
+                renderFunction(data, container);
             } catch (error) {
-                console.error(`Помилка отримання даних з ${endpoint}:`, error.message);
-                return null;
+                container.innerHTML = `<div class="error">Помилка завантаження даних: ${error.message}</div>`;
+                console.error(`Error loading ${endpoint}:`, error);
             }
         }
 
-        async function loadAllData() {
-            // Новини
-            const newsData = await fetchAPI('/news');
-            if (newsData) renderNews(newsData);
+        // --- Функції відображення даних ---
 
-            // Домашнє Завдання
-            const homeworkData = await fetchAPI('/homework');
-            if (homeworkData) renderHomework(homeworkData);
-
-            // Турніри
-            const tournamentData = await fetchAPI('/tournaments');
-            if (tournamentData) renderTournaments(tournamentData);
-            
-            // Список гуртка
-            const membersData = await fetchAPI('/members');
-            if (membersData) renderMembers(membersData);
-
-            // Події
-            const eventsData = await fetchAPI('/events');
-            if (eventsData) renderEvents(eventsData);
-        }
-        
-        // --- Функції відображення ---
-
-        function renderNews(newsData) {
-            const list = document.getElementById('newsList');
-            if (newsData.length === 0) {
-                list.innerHTML = '<p style="color: #7f8c8d;">Новин поки що немає.</p>';
+        // 1. Новини
+        function renderNews(data, container) {
+            if (data.length === 0) {
+                container.innerHTML = '<p>Наразі новин немає.</p>';
                 return;
             }
-            list.innerHTML = newsData.map(post => `
-                <div class="news-post">
-                    <div class="news-title">${post.title}</div>
-                    <span class="news-date">Опубліковано: ${post.date}</span>
-                    <p>${post.description}</p>
-                    ${post.image ? `<img src="${post.image}" alt="${post.title}" class="news-image">` : ''}
+            container.innerHTML = data.map(post => `
+                <div class="item">
+                    <h3>${post.title} <small style="color: #999; font-size: 0.8em;">(${new Date(post.date).toLocaleDateString('uk-UA')})</small></h3>
+                    <p>${post.description.replace(/\n/g, '<br>')}</p>
+                    ${post.imageUrl ? `<img src="${post.imageUrl}" alt="${post.title}" loading="lazy">` : ''}
                 </div>
             `).join('');
         }
 
-        function renderHomework(homeworkData) {
-            const list = document.getElementById('homeworkList');
-            if (homeworkData.length === 0) {
-                list.innerHTML = '<p style="color: #7f8c8d;">Активних домашніх завдань немає.</p>';
+        // 2. Домашнє Завдання
+        function renderHomework(data, container) {
+            if (data.length === 0) {
+                container.innerHTML = '<p>Наразі домашнього завдання немає.</p>';
                 return;
             }
-            list.innerHTML = homeworkData.map(hw => `
-                <div class="homework-item">
-                    <div class="homework-title">${hw.title}</div>
-                    ${hw.image ? `<a href="${hw.image}" target="_blank"><img src="${hw.image}" alt="${hw.title}" class="homework-image"></a>` : '<p>Немає зображення</p>'}
+            container.innerHTML = data.map(hw => `
+                <div class="item">
+                    <h3>${hw.title} <small style="color: #999; font-size: 0.8em;">(${new Date(hw.date).toLocaleDateString('uk-UA')})</small></h3>
+                    ${hw.imageUrl ? `<img src="${hw.imageUrl}" alt="${hw.title}" loading="lazy">` : ''}
                 </div>
             `).join('');
         }
 
-        function renderTournaments(data) {
-            const container = document.getElementById('tournamentResults');
-            let html = '';
-
-            // Поточний турнір
-            if (data.current && data.current.title && data.current.link) {
-                html += `
-                    <div class="tournament-section">
-                        <h2>Поточний Турнір</h2>
-                        <p>${data.current.title}</p>
-                        <a href="${data.current.link}" target="_blank" class="tournament-link">Перейти до результатів</a>
-                    </div>
-                `;
-            } else {
-                html += '<p style="color: #7f8c8d;">Інформація про поточний турнір відсутня.</p>';
-            }
-
-            // Результати минулого тижня
-            if (data.lastWeek) {
-                html += `
-                    <div class="tournament-section">
-                        <h2>Результати Минулого Тижня</h2>
-                        <p>${data.lastWeek}</p>
-                    </div>
-                `;
-            }
-
-            container.innerHTML = html;
-        }
-
-        function renderMembers(membersData) {
-            const list = document.getElementById('membersList');
-            
-            if (!membersData || membersData.error) {
-                 list.innerHTML = `<p style="color: #e74c3c;">Помилка: ${membersData.error || 'Не вдалося завантажити список. Перевірте посилання на Google Sheets в адмін-панелі.'}</p>`;
-                 return;
-            }
-            
-            if (membersData.length === 0) {
-                list.innerHTML = '<p style="color: #7f8c8d;">Список гуртка порожній. Додайте посилання на Google Sheets в адмін-панелі.</p>';
+        // 3. Події
+        function renderEvents(data, container) {
+            if (data.length === 0) {
+                container.innerHTML = '<p>Найближчих подій немає.</p>';
                 return;
             }
-            
-            const table = `
-                <table class="members-table">
-                    <thead>
-                        <tr>
-                            <th>Ім'я Учасника</th>
-                            <th>Рейтинг/Звання</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${membersData.map(member => `
-                            <tr>
-                                <td>${member.name}</td>
-                                <td>${member.rank}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            list.innerHTML = table;
-        }
-
-        function renderEvents(eventsData) {
-            const list = document.getElementById('eventsList');
-            if (!eventsData || eventsData.length === 0) {
-                list.innerHTML = '<p style="color: #7f8c8d;">Активних подій немає</p>';
-                return;
-            }
-            list.innerHTML = eventsData.map(event => `
-                <div class="event-card">
-                    <div class="event-title">${event.title}</div>
-                    <div class="event-info"><strong>📅 Дата:</strong> ${event.date}</div>
-                    <div class="event-info"><strong>📍 Місце:</strong> ${event.location}</div>
-                    <div class="event-info" style="margin-top: 1rem;">${event.description}</div>
+            container.innerHTML = data.map(event => `
+                <div class="item">
+                    <h3>${event.title}</h3>
+                    <p><strong>Дата:</strong> ${event.date}</p>
+                    <p><strong>Місце:</strong> ${event.location}</p>
+                    <p>${event.description}</p>
                 </div>
             `).join('');
         }
 
-        function showTab(tabName) {
-            document.querySelectorAll('.content').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-            
-            document.getElementById('mainNav').classList.remove('mobile-open');
+        // 4. Турніри (Оновлення секції, а не списку)
+        async function loadTournaments() {
+            try {
+                const response = await fetch(`${API_URL}/tournaments`);
+                if (!response.ok) throw new Error('Помилка завантаження турнірів');
+                const data = await response.json();
+
+                // Поточний турнір
+                const titleEl = document.getElementById('currentTitle');
+                const linkEl = document.getElementById('currentLink');
+                
+                titleEl.textContent = data.current?.title || 'Інформація відсутня';
+                
+                if (data.current?.link) {
+                    linkEl.href = data.current.link;
+                    linkEl.style.display = 'block';
+                } else {
+                    linkEl.style.display = 'none';
+                }
+
+                // Результати минулого тижня
+                document.getElementById('lastWeekResults').textContent = data.lastWeek || 'Дані за минулий тиждень відсутні.';
+
+            } catch (error) {
+                document.getElementById('tournaments-section').innerHTML = `<div class="error">Не вдалося завантажити дані про турніри.</div>`;
+            }
         }
 
-        function toggleMobileMenu() {
-            document.getElementById('mainNav').classList.toggle('mobile-open');
+        // 5. Склад гуртка (Google Sheets)
+        function renderMembers(data, container) {
+            if (data.length === 0) {
+                container.innerHTML = '<p>Список учасників не завантажено або порожній. Перевірте налаштування Google Sheets в адмін-панелі.</p>';
+                return;
+            }
+            container.innerHTML = `<ul class="member-list">` + data.map(member => `
+                <li>
+                    <span>${member.name}</span>
+                    <span>Рейтинг: ${member.rating || 'N/A'}</span>
+                </li>
+            `).join('') + `</ul>`;
         }
 
-        // Завантаження даних при старті
-        loadAllData();
 
-        // Періодичне оновлення (кожні 30 секунд)
-        setInterval(loadAllData, 30000);
+        // --- Ініціалізація: Завантаження всіх даних ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTournaments();
+            loadData('/news', 'newsList', renderNews);
+            loadData('/homework', 'homeworkList', renderHomework);
+            loadData('/events', 'eventsList', renderEvents);
+            loadData('/members', 'membersList', renderMembers); // Завантаження учасників
+        });
     </script>
 </body>
 </html>
