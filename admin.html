@@ -302,9 +302,10 @@
 
     <script>
         // НАЛАШТУВАННЯ: Вкажіть URL вашого бекенду
-        // ОНОВЛЕНО: Використовується ваше посилання на Render
+        // URL ВСТАНОВЛЕНО НА Render
         const API_URL = 'https://chess-2pyz.onrender.com/api'; 
-        const ADMIN_PASSWORD = 'GlobusTeam'; // Ваш пароль
+        // 🔑 ПАРОЛЬ: ПЕРЕКОНАЙТЕСЯ, ЩО ЦЕЙ ПАРОЛЬ ТАКОЖ ВСТАНОВЛЕНО НА ВАШОМУ БЕКЕНДІ RENDER
+        const ADMIN_PASSWORD = 'GlobusTeam'; 
 
         let isLoggedIn = false;
         let newsData = [];
@@ -644,14 +645,14 @@
         
         // --- Функції CRUD ---
         
+        // ВИПРАВЛЕНО: Передача пароля через query parameter
         async function deleteNews(id) {
             if (!confirm(`Ви впевнені, що хочете видалити новину з ID: ${id}?`)) return;
             
             try {
-                const response = await fetch(`${API_URL}/news/${id}`, {
+                const response = await fetch(`${API_URL}/news/${id}?password=${ADMIN_PASSWORD}`, {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: ADMIN_PASSWORD })
+                    // ВИДАЛЕНО: headers та body
                 });
 
                 const result = await response.json();
@@ -660,21 +661,21 @@
                     showAlert('Новину успішно видалено!', 'success');
                     await loadNews();
                 } else {
-                    showAlert(result.error || 'Помилка видалення новини', 'error');
+                    showAlert(result.error || 'Помилка видалення новини (зв\'яжіться з адміністратором бекенду)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             }
         }
         
+        // ВИПРАВЛЕНО: Передача пароля через query parameter
         async function deleteHomework(id) {
             if (!confirm(`Ви впевнені, що хочете видалити завдання з ID: ${id}?`)) return;
 
             try {
-                const response = await fetch(`${API_URL}/homework/${id}`, {
+                const response = await fetch(`${API_URL}/homework/${id}?password=${ADMIN_PASSWORD}`, {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: ADMIN_PASSWORD })
+                    // ВИДАЛЕНО: headers та body
                 });
 
                 const result = await response.json();
@@ -683,21 +684,21 @@
                     showAlert('Завдання успішно видалено!', 'success');
                     await loadHomework();
                 } else {
-                    showAlert(result.error || 'Помилка видалення завдання', 'error');
+                    showAlert(result.error || 'Помилка видалення завдання (зв\'яжіться з адміністратором бекенду)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             }
         }
         
+        // ВИПРАВЛЕНО: Передача пароля через query parameter
         async function deleteEvent(id) {
             if (!confirm(`Ви впевнені, що хочете видалити подію з ID: ${id}?`)) return;
 
             try {
-                const response = await fetch(`${API_URL}/events/${id}`, {
+                const response = await fetch(`${API_URL}/events/${id}?password=${ADMIN_PASSWORD}`, {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: ADMIN_PASSWORD })
+                    // ВИДАЛЕНО: headers та body
                 });
 
                 const result = await response.json();
@@ -706,21 +707,21 @@
                     showAlert('Подію успішно видалено!', 'success');
                     await loadEvents();
                 } else {
-                    showAlert(result.error || 'Помилка видалення події', 'error');
+                    showAlert(result.error || 'Помилка видалення події (зв\'яжіться з адміністратором бекенду)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             }
         }
 
+        // ВИПРАВЛЕНО: Передача пароля через query parameter
         async function deleteTournamentConfig() {
             if (!confirm('Ви впевнені, що хочете видалити поточні налаштування турнірів (поточний турнір та результати минулого тижня)? Це призведе до очищення даних.')) return;
 
             try {
-                const response = await fetch(`${API_URL}/tournaments`, {
+                const response = await fetch(`${API_URL}/tournaments?password=${ADMIN_PASSWORD}`, {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: ADMIN_PASSWORD })
+                    // ВИДАЛЕНО: headers та body
                 });
 
                 const result = await response.json();
@@ -733,14 +734,14 @@
                     document.getElementById('tournResults').value = '';
                     await loadTournaments(); // Оновлення відображення
                 } else {
-                    showAlert(result.error || 'Помилка видалення налаштувань турнірів', 'error');
+                    showAlert(result.error || 'Помилка видалення налаштувань турнірів (зв\'яжіться з адміністратором бекенду)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             }
         }
 
-        // --- Існуючі функції ---
+        // --- Існуючі функції (БЕЗ ЗМІН) ---
 
         function login() {
             const password = document.getElementById('password').value;
