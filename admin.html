@@ -302,9 +302,10 @@
 
     <script>
         // НАЛАШТУВАННЯ: Вкажіть URL вашого бекенду
-        // ОНОВЛЕНО: Використовується ваше посилання на Render
+        // URL ВСТАНОВЛЕНО НА Render
         const API_URL = 'https://chess-2pyz.onrender.com/api'; 
-        const ADMIN_PASSWORD = 'GlobusTeam'; // Ваш пароль
+        // 🔑 ПАРОЛЬ: ПЕРЕКОНАЙТЕСЯ, ЩО ЦЕЙ ПАРОЛЬ ТАКОЖ ВСТАНОВЛЕНО НА ВАШОМУ БЕКЕНДІ RENDER
+        const ADMIN_PASSWORD = 'GlobusTeam'; 
 
         let isLoggedIn = false;
         let newsData = [];
@@ -328,7 +329,6 @@
             return `
                 <div class="header">
                     <h1>Адмін-панель</h1>
-                    <p>Шаховий Гурток - Панель керування</p>
                 </div>
                 <div class="login-container">
                     <h2 class="login-title">Вхід для тренера</h2>
@@ -643,7 +643,7 @@
                     showAlert('Новину успішно видалено!', 'success');
                     await loadNews();
                 } else {
-                    showAlert(result.error || 'Помилка видалення новини', 'error');
+                    showAlert(result.error || 'Помилка видалення новини (невірний пароль?)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -666,7 +666,7 @@
                     showAlert('Завдання успішно видалено!', 'success');
                     await loadHomework();
                 } else {
-                    showAlert(result.error || 'Помилка видалення завдання', 'error');
+                    showAlert(result.error || 'Помилка видалення завдання (невірний пароль?)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -689,7 +689,7 @@
                     showAlert('Подію успішно видалено!', 'success');
                     await loadEvents();
                 } else {
-                    showAlert(result.error || 'Помилка видалення події', 'error');
+                    showAlert(result.error || 'Помилка видалення події (невірний пароль?)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -803,7 +803,7 @@
                     document.getElementById('newsPreview').style.display = 'none';
                     await loadNews(); // Оновити список
                 } else {
-                    showAlert(result.error || 'Помилка публікації', 'error');
+                    showAlert(result.error || 'Помилка публікації (невірний пароль?)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -843,7 +843,7 @@
                     document.getElementById('hwPreview').style.display = 'none';
                     await loadHomework(); // Оновити список
                 } else {
-                    showAlert(result.error || 'Помилка додавання', 'error');
+                    showAlert(result.error || 'Помилка додавання (невірний пароль?)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -882,7 +882,7 @@
                     showAlert('Налаштування збережено!');
                     await loadSheetsConfig(); // Оновити відображення
                 } else {
-                    showAlert(result.error || 'Помилка збереження', 'error');
+                    showAlert(result.error || 'Помилка збереження (невірний пароль?)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -918,7 +918,7 @@
                     showAlert('Турнір успішно оновлено!');
                     await loadTournaments(); // Оновити відображення
                 } else {
-                    showAlert(result.error || 'Помилка оновлення', 'error');
+                    showAlert(result.error || 'Помилка оновлення (невірний пароль?)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -965,7 +965,7 @@
                     document.getElementById('eventDesc').value = '';
                     await loadEvents(); // Оновити список
                 } else {
-                    showAlert(result.error || 'Помилка додавання', 'error');
+                    showAlert(result.error || 'Помилка додавання (невірний пароль?)', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
