@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Адмін-панель</title>
+    <title>Адмін-панель - Шаховий Гурток</title>
     <style>
-        /* Стилі з вашого файлу admin.html */
         * {
             margin: 0;
             padding: 0;
@@ -134,7 +133,7 @@
             width: 100%;
         }
 
-        .btn:hover:not(:disabled) {
+        .btn:hover {
             background: #2980b9;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
@@ -150,7 +149,7 @@
             background: #27ae60;
         }
 
-        .btn-success:hover:not(:disabled) {
+        .btn-success:hover {
             background: #229954;
         }
 
@@ -160,7 +159,7 @@
             width: auto;
         }
 
-        .btn-danger:hover:not(:disabled) {
+        .btn-danger:hover {
             background: #c0392b;
         }
 
@@ -178,7 +177,6 @@
             border-radius: 5px;
             margin-bottom: 1rem;
             animation: slideIn 0.3s;
-            display: none; /* За замовчуванням приховано */
         }
 
         .alert-success {
@@ -238,7 +236,6 @@
             margin-top: 1rem;
             border-radius: 5px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: none; /* За замовчуванням приховано */
         }
 
         /* Стилі для списків контенту */
@@ -283,40 +280,6 @@
             color: #2c3e50;
         }
 
-        /* Стилі для вкладок */
-        .tabs {
-            display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ccc;
-        }
-        .tab-btn {
-            background: #eee;
-            color: #333;
-            border: 1px solid #ccc;
-            border-bottom: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-right: 5px;
-            border-radius: 5px 5px 0 0;
-            transition: background 0.3s;
-        }
-        .tab-btn.active {
-            background: #fff;
-            color: #c0392b;
-            border: 1px solid #c0392b;
-            border-bottom: 1px solid #fff;
-            font-weight: bold;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-
-
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.5rem;
@@ -338,10 +301,9 @@
     <div id="app"></div>
 
     <script>
-        // ✅ ВАША АКТУАЛЬНА АДРЕСА RENDER
-        const API_URL = 'https://chess-2pyz.onrender.com/api'; 
-        const AUTH_KEY = 'chess_admin_auth';
-        let ADMIN_PASSWORD = ''; // Пароль буде зберігатися тут після входу
+        // НАЛАШТУВАННЯ: Вкажіть URL вашого бекенду
+        const API_URL = 'http://localhost:3000/api'; // ЗАЛИШИВ ЛОКАЛЬНИЙ URL ЯК У ВИХІДНОМУ ФАЙЛІ
+        const ADMIN_PASSWORD = 'chess2024'; // Ваш пароль
 
         let isLoggedIn = false;
         let newsData = [];
@@ -350,19 +312,14 @@
         let sheetsConfig = {};
         let tournamentsConfig = {};
 
-        // --- Функції рендерингу ---
-
         function render() {
             const app = document.getElementById('app');
             
-            if (isAuthenticated()) {
-                // Витягуємо пароль з localStorage, якщо він є
-                ADMIN_PASSWORD = localStorage.getItem('admin_pass');
-                app.innerHTML = renderAdminPanel();
-                loadAdminData(); 
-                showTab('news-tab'); // Показуємо вкладку "Новини" за замовчуванням
-            } else {
+            if (!isLoggedIn) {
                 app.innerHTML = renderLogin();
+            } else {
+                app.innerHTML = renderAdminPanel();
+                loadAdminData(); // Завантаження даних при вході
             }
         }
 
@@ -370,13 +327,14 @@
             return `
                 <div class="header">
                     <h1>🔐 Адмін-панель</h1>
+                    <p>Шаховий Гурток - Панель керування</p>
                 </div>
                 <div class="login-container">
                     <h2 class="login-title">Вхід для тренера</h2>
                     <div id="loginAlert"></div>
                     <div class="form-group">
                         <label class="form-label">Пароль</label>
-                        <input type="password" id="adminPassword" class="input" placeholder="Введіть пароль" onkeypress="if(event.key==='Enter') login()">
+                        <input type="password" id="password" class="input" placeholder="Введіть пароль" onkeypress="if(event.key==='Enter') login()">
                     </div>
                     <button class="btn" onclick="login()">Увійти</button>
                 </div>
@@ -393,223 +351,374 @@
                 <div class="container">
                     <div id="alerts"></div>
 
-                    <div class="tabs">
-                        <button class="tab-btn active" onclick="showTab('news-tab')">Новини / ДЗ</button>
-                        <button class="tab-btn" onclick="showTab('events-tab')">Події</button>
-                        <button class="tab-btn" onclick="showTab('tournaments-tab')">Турніри</button>
-                        <button class="tab-btn" onclick="showTab('sheets-tab')">Google Sheets</button>
+                    <div class="section">
+                        <h2 class="section-title">📰 Додати новину</h2>
+                        <div class="form-group">
+                            <label class="form-label">Заголовок новини</label>
+                            <input type="text" id="newsTitle" class="input" placeholder="Наприклад: Іван Петренко отримав 1 розряд!">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Опис новини</label>
+                            <textarea id="newsDesc" class="input textarea" placeholder="Розкажіть детальніше про подію..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Фото</label>
+                            <div class="file-input-wrapper">
+                                <label class="file-input-label" for="newsImage">
+                                    📸 Натисніть для вибору фото
+                                </label>
+                                <input type="file" id="newsImage" accept="image/*" onchange="previewImage(this, 'newsPreview')">
+                            </div>
+                            <img id="newsPreview" class="preview-image" style="display: none;">
+                        </div>
+                        <button class="btn" onclick="publishNews()" id="newsBtn">Опублікувати новину</button>
                     </div>
 
-                    <div id="news-tab" class="tab-content active">
-                        <div class="section">
-                            <h2 class="section-title">📰 Додати новину</h2>
-                            <div id="news-form-container">
-                                ${renderNewsForm()}
-                            </div>
-                        </div>
-
-                        <div class="section">
-                            <h2 class="section-title">🗑️ Керування новинами</h2>
-                            <div id="newsList">Завантаження новин...</div>
-                        </div>
-                        
-                        <div class="section">
-                            <h2 class="section-title">📚 Додати домашнє завдання</h2>
-                            <div id="homework-form-container">
-                                ${renderHomeworkForm()}
-                            </div>
-                        </div>
-                        
-                        <div class="section">
-                            <h2 class="section-title">🗑️ Керування завданнями</h2>
-                            <div id="homeworkList">Завантаження завдань...</div>
-                        </div>
+                    <div class="section">
+                        <h2 class="section-title">🗑️ Керування новинами</h2>
+                        <div id="newsList">Завантаження новин...</div>
                     </div>
 
-                    <div id="events-tab" class="tab-content">
-                        <div class="section">
-                            <h2 class="section-title">📅 Додати подію</h2>
-                            <div id="events-form-container">
-                                ${renderEventsForm()}
+                    <div class="section">
+                        <h2 class="section-title">📚 Додати домашнє завдання</h2>
+                        <div class="form-group">
+                            <label class="form-label">Назва завдання</label>
+                            <input type="text" id="hwTitle" class="input" placeholder="Наприклад: Завдання на тиждень 15-21 листопада">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Зображення завдання</label>
+                            <div class="info-box">
+                                ℹ️ Завантажте зображення з шаховою позицією або задачею
                             </div>
+                            <div class="file-input-wrapper">
+                                <label class="file-input-label" for="hwImage">
+                                    📸 Натисніть для вибору зображення
+                                </label>
+                                <input type="file" id="hwImage" accept="image/*" onchange="previewImage(this, 'hwPreview')">
+                            </div>
+                            <img id="hwPreview" class="preview-image" style="display: none;">
                         </div>
-                        <div class="section">
-                            <h2 class="section-title">🗑️ Керування подіями</h2>
-                            <div id="eventsList">Завантаження подій...</div>
-                        </div>
+                        <button class="btn" onclick="publishHomework()" id="hwBtn">Додати завдання</button>
+                    </div>
+                    
+                    <div class="section">
+                        <h2 class="section-title">🗑️ Керування завданнями</h2>
+                        <div id="homeworkList">Завантаження завдань...</div>
                     </div>
 
-                    <div id="tournaments-tab" class="tab-content">
-                        <div class="section">
-                            <h2 class="section-title">🏆 Оновити турнір</h2>
-                            <div id="tournaments-form-container">
-                                ${renderTournamentsForm()}
-                            </div>
+                    <div class="section">
+                        <h2 class="section-title">👥 Налаштування Google Таблиці</h2>
+                        <div class="info-box">
+                            <strong>📋 Інструкція:</strong><br>
+                            1. Створіть Google Таблицю з двома колонками: "Ім'я" та "Розряд"<br>
+                            2. Налаштуйте доступ: Файл → Надати доступ → Будь-хто з посиланням може переглядати<br>
+                            3. Скопіюйте посилання на таблицю і вставте нижче<br>
+                            4. Дані будуть автоматично оновлюватися на сайті
                         </div>
-                        <div class="section">
-                            <h2 class="section-title">ℹ️ Поточна інформація про турніри</h2>
-                            <div id="tournamentsCurrentConfig">Завантаження...</div>
+                        <div class="current-setting" id="sheetsCurrentConfig">
+                            Завантаження поточної конфігурації...
                         </div>
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <label class="form-label">Посилання на Google Таблицю</label>
+                            <input type="text" id="sheetsUrl" class="input" placeholder="https://docs.google.com/spreadsheets/d/...">
+                        </div>
+                        <button class="btn btn-success" onclick="saveSheets()" id="sheetsBtn">Зберегти налаштування</button>
                     </div>
 
-                    <div id="sheets-tab" class="tab-content">
-                        <div class="section">
-                            <h2 class="section-title">👥 Налаштування Google Таблиці</h2>
-                            <div id="sheets-config-container">
-                                ${renderSheetsConfigForm()}
-                            </div>
+                    <div class="section">
+                        <h2 class="section-title">🏆 Оновити турнір</h2>
+                        <div class="form-group">
+                            <label class="form-label">Назва поточного турніру</label>
+                            <input type="text" id="tournTitle" class="input" placeholder="Наприклад: Турнір вихідного дня">
                         </div>
-                        <div class="section">
-                            <h2 class="section-title">ℹ️ Поточні налаштування Sheets</h2>
-                            <div class="current-setting" id="sheetsCurrentConfig">
-                                Завантаження поточної конфігурації...
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Посилання на турнір</label>
+                            <input type="text" id="tournLink" class="input" placeholder="https://...">
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Результати минулого тижня</label>
+                            <textarea id="tournResults" class="input textarea" placeholder="1 місце - Іван Петренко
+2 місце - Марія Іваненко
+3 місце - Олег Сидоренко"></textarea>
+                        </div>
+                        <button class="btn" onclick="publishTournament()" id="tournBtn">Оновити турнір</button>
+                    </div>
+                    
+                    <div class="section">
+                        <h2 class="section-title">ℹ️ Поточна інформація про турніри</h2>
+                        <div id="tournamentsCurrentConfig">Завантаження...</div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">📅 Додати подію</h2>
+                        <div class="form-group">
+                            <label class="form-label">Назва події</label>
+                            <input type="text" id="eventTitle" class="input" placeholder="Наприклад: Відкритий турнір Львівської області">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Дата проведення</label>
+                            <input type="text" id="eventDate" class="input" placeholder="Наприклад: 20-21 листопада 2025">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Місце проведення</label>
+                            <input type="text" id="eventLocation" class="input" placeholder="Наприклад: Палац спорту, вул. Городоцька 120">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Опис події</label>
+                            <textarea id="eventDesc" class="input textarea" placeholder="Детальна інформація про подію..."></textarea>
+                        </div>
+                        <button class="btn" onclick="publishEvent()" id="eventBtn">Додати подію</button>
+                    </div>
+                    
+                    <div class="section">
+                        <h2 class="section-title">🗑️ Керування подіями</h2>
+                        <div id="eventsList">Завантаження подій...</div>
                     </div>
                 </div>
             `;
         }
 
-        // --- Рендеринг форм (Виділено для чистоти коду) ---
-
-        function renderNewsForm() {
-            return `
-                <form id="news-form">
-                    <div class="form-group">
-                        <label class="form-label">Заголовок новини</label>
-                        <input type="text" id="newsTitle" class="input" placeholder="Наприклад: Іван Петренко отримав 1 розряд!" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Опис новини</label>
-                        <textarea id="newsDesc" class="input textarea" placeholder="Розкажіть детальніше про подію..." required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Фото</label>
-                        <div class="file-input-wrapper">
-                            <label class="file-input-label" for="newsImage">
-                                📸 Натисніть для вибору фото
-                            </label>
-                            <input type="file" id="newsImage" accept="image/*" onchange="previewImage(this, 'newsPreview')">
-                        </div>
-                        <img id="newsPreview" class="preview-image">
-                    </div>
-                    <button type="submit" class="btn" id="newsBtn">Опублікувати новину</button>
-                </form>
-            `;
+        async function loadAdminData() {
+            await Promise.all([
+                loadNews(),
+                loadHomework(),
+                loadEvents(),
+                loadSheetsConfig(true), // Завантаження з попереднім заповненням форми
+                loadTournaments(true) // Завантаження з попереднім заповненням форми
+            ]);
         }
 
-        function renderHomeworkForm() {
-            return `
-                <form id="homework-form">
-                    <div class="form-group">
-                        <label class="form-label">Назва завдання</label>
-                        <input type="text" id="hwTitle" class="input" placeholder="Наприклад: Завдання на тиждень 15-21 листопада" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Зображення завдання</label>
-                        <div class="info-box">
-                            ℹ️ Завантажте зображення з шаховою позицією або задачею
-                        </div>
-                        <div class="file-input-wrapper">
-                            <label class="file-input-label" for="hwImage">
-                                📸 Натисніть для вибору зображення
-                            </label>
-                            <input type="file" id="hwImage" accept="image/*" onchange="previewImage(this, 'hwPreview')" required>
-                        </div>
-                        <img id="hwPreview" class="preview-image">
-                    </div>
-                    <button type="submit" class="btn" id="hwBtn">Додати завдання</button>
-                </form>
-            `;
-        }
-        
-        function renderEventsForm() {
-            return `
-                <form id="events-form">
-                    <div class="form-group">
-                        <label class="form-label">Назва події</label>
-                        <input type="text" id="eventTitle" class="input" placeholder="Наприклад: Відкритий турнір Львівської області" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Дата проведення</label>
-                        <input type="text" id="eventDate" class="input" placeholder="Наприклад: 20-21 листопада 2025" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Місце проведення</label>
-                        <input type="text" id="eventLocation" class="input" placeholder="Наприклад: Палац спорту, вул. Городоцька 120" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Опис події</label>
-                        <textarea id="eventDesc" class="input textarea" placeholder="Детальна інформація про подію..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn" id="eventBtn">Додати подію</button>
-                </form>
-            `;
-        }
-        
-        function renderTournamentsForm() {
-            return `
-                <form id="tournaments-form">
-                    <div class="form-group">
-                        <label class="form-label">Назва поточного турніру</label>
-                        <input type="text" id="tournTitle" class="input" placeholder="Наприклад: Турнір вихідного дня">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Посилання на турнір</label>
-                        <input type="text" id="tournLink" class="input" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Результати минулого тижня</label>
-                        <textarea id="tournResults" class="input textarea" placeholder="1 місце - Іван Петренко
-2 місце - Марія Іваненко..."></textarea>
-                    </div>
-                    <button type="submit" class="btn" id="tournBtn">Оновити турнір</button>
-                </form>
-            `;
-        }
-
-        function renderSheetsConfigForm() {
-             return `
-                <form id="sheets-config-form">
-                    <div class="info-box">
-                        <strong>📋 Інструкція:</strong><br>
-                        1. Створіть Google Таблицю з двома колонками: "Ім'я" та "Розряд" або "Рейтинг"<br>
-                        2. Налаштуйте доступ: Файл → Надати доступ → **Будь-хто з посиланням може переглядати**<br>
-                        3. Скопіюйте посилання на таблицю і вставте нижче
-                    </div>
-                    <div class="form-group" style="margin-top: 1.5rem;">
-                        <label class="form-label">Посилання на Google Таблицю</label>
-                        <input type="url" id="sheetsUrl" class="input" placeholder="https://docs.google.com/spreadsheets/d/..." required>
-                    </div>
-                    <button type="submit" class="btn btn-success" id="sheetsBtn">Зберегти налаштування</button>
-                </form>
-            `;
-        }
-
-
-        // --- Логіка та API виклики ---
-
-        function isAuthenticated() {
-            // Перевіряємо, чи встановлено прапорець і чи є пароль
-            return localStorage.getItem(AUTH_KEY) === 'true' && localStorage.getItem('admin_pass') !== null;
-        }
-        
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            document.getElementById(tabName).classList.add('active');
-            // Знаходимо кнопку, яка відповідає цій вкладці, та робимо її активною
-            const targetButton = document.querySelector(`.tab-btn[onclick="showTab('${tabName}')"]`);
-            if (targetButton) {
-                targetButton.classList.add('active');
+        async function loadNews() {
+            try {
+                const response = await fetch(`${API_URL}/news`);
+                newsData = await response.json();
+                renderNewsList();
+            } catch (error) {
+                document.getElementById('newsList').innerHTML = '<div class="alert alert-error">Не вдалося завантажити новини.</div>';
             }
-            window.scrollTo(0, 0);
+        }
+
+        async function loadHomework() {
+            try {
+                const response = await fetch(`${API_URL}/homework`);
+                homeworkData = await response.json();
+                renderHomeworkList();
+            } catch (error) {
+                document.getElementById('homeworkList').innerHTML = '<div class="alert alert-error">Не вдалося завантажити завдання.</div>';
+            }
+        }
+
+        async function loadEvents() {
+            try {
+                const response = await fetch(`${API_URL}/events`);
+                eventsData = await response.json();
+                renderEventsList();
+            } catch (error) {
+                document.getElementById('eventsList').innerHTML = '<div class="alert alert-error">Не вдалося завантажити події.</div>';
+            }
+        }
+
+        async function loadSheetsConfig(initialLoad = false) {
+            try {
+                const response = await fetch(`${API_URL}/sheets-config`);
+                sheetsConfig = await response.json();
+                renderSheetsConfig();
+                if (initialLoad) {
+                    document.getElementById('sheetsUrl').value = sheetsConfig.url || '';
+                }
+            } catch (error) {
+                document.getElementById('sheetsCurrentConfig').innerHTML = '<div class="alert alert-error">Не вдалося завантажити конфігурацію Google Sheets.</div>';
+            }
+        }
+        
+        async function loadTournaments(initialLoad = false) {
+            try {
+                const response = await fetch(`${API_URL}/tournaments`);
+                tournamentsConfig = await response.json();
+                renderTournamentsConfig();
+                if (initialLoad) {
+                    document.getElementById('tournTitle').value = tournamentsConfig.current?.title || '';
+                    document.getElementById('tournLink').value = tournamentsConfig.current?.link || '';
+                    document.getElementById('tournResults').value = tournamentsConfig.lastWeek || '';
+                }
+            } catch (error) {
+                document.getElementById('tournamentsCurrentConfig').innerHTML = '<div class="alert alert-error">Не вдалося завантажити конфігурацію турнірів.</div>';
+            }
+        }
+        
+        // --- Рендеринг списків ---
+        function renderNewsList() {
+            const list = document.getElementById('newsList');
+            if (newsData.length === 0) {
+                list.innerHTML = '<p style="color: #7f8c8d;">Новин поки немає.</p>';
+                return;
+            }
+            list.innerHTML = newsData.map(post => `
+                <div class="content-item">
+                    <div class="content-details">
+                        <div class="item-title">${post.title}</div>
+                        <div class="item-meta">${post.date} (ID: ${post.id})</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteNews(${post.id})">Видалити</button>
+                </div>
+            `).join('');
+        }
+
+        function renderHomeworkList() {
+            const list = document.getElementById('homeworkList');
+            if (homeworkData.length === 0) {
+                list.innerHTML = '<p style="color: #7f8c8d;">Завдань поки немає.</p>';
+                return;
+            }
+            list.innerHTML = homeworkData.map(hw => `
+                <div class="content-item">
+                    <div class="content-details">
+                        <div class="item-title">${hw.title}</div>
+                        <div class="item-meta">ID: ${hw.id}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteHomework(${hw.id})">Видалити</button>
+                </div>
+            `).join('');
+        }
+
+        function renderEventsList() {
+            const list = document.getElementById('eventsList');
+            if (eventsData.length === 0) {
+                list.innerHTML = '<p style="color: #7f8c8d;">Подій поки немає.</p>';
+                return;
+            }
+            list.innerHTML = eventsData.map(event => `
+                <div class="content-item">
+                    <div class="content-details">
+                        <div class="item-title">${event.title}</div>
+                        <div class="item-meta">${event.date}, ${event.location} (ID: ${event.id})</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteEvent(${event.id})">Видалити</button>
+                </div>
+            `).join('');
+        }
+        
+        function renderSheetsConfig() {
+            const configDiv = document.getElementById('sheetsCurrentConfig');
+            if (sheetsConfig.url) {
+                configDiv.innerHTML = `
+                    <strong>Поточне посилання:</strong> 
+                    <a href="${sheetsConfig.url}" target="_blank">${sheetsConfig.url.substring(0, 70)}...</a>
+                `;
+            } else {
+                configDiv.innerHTML = '<strong>Поточне посилання:</strong> Не встановлено';
+            }
+        }
+        
+        function renderTournamentsConfig() {
+            const configDiv = document.getElementById('tournamentsCurrentConfig');
+            
+            let current = tournamentsConfig.current ? 
+                `<strong>Поточний турнір:</strong> <a href="${tournamentsConfig.current.link}" target="_blank">${tournamentsConfig.current.title}</a>` :
+                '<strong>Поточний турнір:</strong> Немає';
+                
+            let lastWeek = tournamentsConfig.lastWeek ? 
+                `<strong>Результати минулого тижня:</strong> <pre style="white-space: pre-wrap; margin: 0; font-family: inherit;">${tournamentsConfig.lastWeek.substring(0, 150)}...</pre>` :
+                '<strong>Результати минулого тижня:</strong> Немає';
+
+            configDiv.innerHTML = `<div class="current-setting">${current}<hr style="margin: 10px 0; border: 0; border-top: 1px solid #e0e0e0;">${lastWeek}</div>`;
+        }
+        
+        // --- Функції CRUD ---
+        
+        async function deleteNews(id) {
+            if (!confirm(`Ви впевнені, що хочете видалити новину з ID: ${id}?`)) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/news/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: ADMIN_PASSWORD })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert('Новину успішно видалено!', 'success');
+                    await loadNews();
+                } else {
+                    showAlert(result.error || 'Помилка видалення новини', 'error');
+                }
+            } catch (error) {
+                showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
+            }
+        }
+        
+        async function deleteHomework(id) {
+            if (!confirm(`Ви впевнені, що хочете видалити завдання з ID: ${id}?`)) return;
+
+            try {
+                const response = await fetch(`${API_URL}/homework/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: ADMIN_PASSWORD })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert('Завдання успішно видалено!', 'success');
+                    await loadHomework();
+                } else {
+                    showAlert(result.error || 'Помилка видалення завдання', 'error');
+                }
+            } catch (error) {
+                showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
+            }
+        }
+        
+        async function deleteEvent(id) {
+            if (!confirm(`Ви впевнені, що хочете видалити подію з ID: ${id}?`)) return;
+
+            try {
+                const response = await fetch(`${API_URL}/events/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: ADMIN_PASSWORD })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert('Подію успішно видалено!', 'success');
+                    await loadEvents();
+                } else {
+                    showAlert(result.error || 'Помилка видалення події', 'error');
+                }
+            } catch (error) {
+                showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
+            }
+        }
+
+        // --- Існуючі функції ---
+
+        function login() {
+            const password = document.getElementById('password').value;
+            const alertDiv = document.getElementById('loginAlert');
+            
+            // Якщо ви викликали disableButton тут, переконайтеся, що кнопка має ID
+            
+            if (password === ADMIN_PASSWORD) {
+                isLoggedIn = true;
+                render();
+            } else {
+                alertDiv.innerHTML = '<div class="alert alert-error">❌ Невірний пароль!</div>';
+                setTimeout(() => {
+                    alertDiv.innerHTML = '';
+                }, 3000);
+            }
+        }
+
+        function logout() {
+            if (confirm('Ви впевнені, що хочете вийти?')) {
+                isLoggedIn = false;
+                render();
+            }
         }
 
         function showAlert(message, type = 'success') {
@@ -618,13 +727,30 @@
             const icon = type === 'success' ? '✅' : '❌';
             
             alertsDiv.innerHTML = `<div class="alert ${alertClass}">${icon} ${message}</div>`;
-            document.querySelector('.alert').style.display = 'block';
             
             setTimeout(() => {
-                document.querySelector('.alert').style.display = 'none';
+                alertsDiv.innerHTML = '';
             }, 5000);
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // ВИПРАВЛЕНО: Додано перевірку if (btn) для запобігання помилки TypeError
+        function disableButton(btnId) {
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Публікація...';
+            }
+        }
+
+        // ВИПРАВЛЕНО: Додано перевірку if (btn) для запобігання помилки TypeError
+        function enableButton(btnId, text) {
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = text;
+            }
         }
 
         function previewImage(input, previewId) {
@@ -638,291 +764,31 @@
                     preview.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
-            } else {
-                 preview.style.display = 'none';
             }
         }
 
-        function disableButton(btnId, text = 'Зачекайте...') {
-            const btn = document.getElementById(btnId);
-            btn.disabled = true;
-            btn.textContent = text;
-        }
-
-        function enableButton(btnId, text) {
-            const btn = document.getElementById(btnId);
-            btn.disabled = false;
-            btn.textContent = text;
-        }
-
-
-        // --- Автентифікація ---
-
-        async function login() {
-            const inputPassword = document.getElementById('adminPassword').value;
-            const alertDiv = document.getElementById('loginAlert');
-            
-            if (!inputPassword) return;
-
-            disableButton('loginBtn', 'Перевірка...');
-
-            // Використовуємо POST-запит до /news для перевірки пароля
-            try {
-                 const response = await fetch(`${API_URL}/news`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        password: inputPassword,
-                        title: 'TEST_AUTH', 
-                        description: 'TEST_AUTH'
-                    })
-                });
-
-                if (response.status === 401) {
-                    alertDiv.innerHTML = '<div class="alert alert-error">❌ Невірний пароль!</div>';
-                } else if (response.ok || response.status === 400) { // 400 може бути, якщо ми не надали зображення
-                    
-                    // Пароль вірний. Видаляємо тестовий запис, якщо він був створений.
-                    if(response.ok) {
-                         const result = await response.json();
-                         if (result._id) {
-                            await fetch(`${API_URL}/news/${result._id}`, {
-                                method: 'DELETE',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ password: inputPassword })
-                            });
-                         }
-                    }
-
-                    ADMIN_PASSWORD = inputPassword;
-                    localStorage.setItem(AUTH_KEY, 'true');
-                    localStorage.setItem('admin_pass', inputPassword);
-                    render();
-                    showAlert('Вхід успішний!', 'success');
-                } else {
-                    const errorData = await response.json();
-                    alertDiv.innerHTML = `<div class="alert alert-error">Помилка: ${errorData.error || 'Незрозуміла помилка'}</div>`;
-                }
-            } catch (error) {
-                alertDiv.innerHTML = '<div class="alert alert-error">Помилка з\'єднання з сервером.</div>';
-                console.error('Помилка входу:', error);
-            } finally {
-                enableButton('loginBtn', 'Увійти');
-                document.getElementById('adminPassword').value = '';
-            }
-        }
-
-        function logout() {
-            if (confirm('Ви впевнені, що хочете вийти?')) {
-                localStorage.removeItem(AUTH_KEY);
-                localStorage.removeItem('admin_pass');
-                ADMIN_PASSWORD = '';
-                render();
-                showAlert('Ви успішно вийшли.', 'success');
-            }
-        }
-
-        // --- Завантаження даних ---
-
-        async function loadList(endpoint, listId, renderFunction) {
-            try {
-                const response = await fetch(`${API_URL}${endpoint}`);
-                if (!response.ok) throw new Error('Помилка мережі або сервера.');
-                const data = await response.json();
-                renderFunction(data);
-                return data;
-            } catch (error) {
-                document.getElementById(listId).innerHTML = `<div class="alert alert-error" style="display: block;">Помилка завантаження: ${error.message}</div>`;
-                return [];
-            }
-        }
-
-        async function loadAdminData() {
-            // Завантажуємо списки
-            newsData = await loadList('/news', 'newsList', renderNewsList);
-            homeworkData = await loadList('/homework', 'homeworkList', renderHomeworkList);
-            eventsData = await loadList('/events', 'eventsList', renderEventsList);
-
-            // Завантажуємо конфігурації
-            await loadConfigs();
-        }
-
-        async function loadConfigs() {
-            try {
-                // 1. Конфігурація турнірів
-                const tournamentResponse = await fetch(`${API_URL}/tournaments`);
-                tournamentsConfig = await tournamentResponse.json();
-                renderTournamentsConfig(); 
-                
-                // Заповнення форми
-                document.getElementById('tournTitle').value = tournamentsConfig.current?.title || '';
-                document.getElementById('tournLink').value = tournamentsConfig.current?.link || '';
-                document.getElementById('tournResults').value = tournamentsConfig.lastWeek || '';
-            } catch (error) {
-                 document.getElementById('tournamentsCurrentConfig').innerHTML = `<div class="alert alert-error" style="display: block;">Помилка завантаження конфігурації турнірів.</div>`;
-            }
-            
-            try {
-                // 2. Конфігурація Google Sheets
-                const sheetsResponse = await fetch(`${API_URL}/sheets-config`);
-                sheetsConfig = await sheetsResponse.json();
-                renderSheetsConfig();
-
-                // Заповнення форми
-                document.getElementById('sheetsUrl').value = sheetsConfig.url || '';
-            } catch (error) {
-                 document.getElementById('sheetsCurrentConfig').innerHTML = `<div class="alert alert-error" style="display: block;">Помилка завантаження конфігурації Google Sheets.</div>`;
-            }
-        }
-
-        // --- Функції відображення списків ---
-
-        function renderNewsList(data) {
-            const list = document.getElementById('newsList');
-            if (data.length === 0) {
-                list.innerHTML = '<p style="color: #7f8c8d;">Новин поки немає.</p>';
-                return;
-            }
-            list.innerHTML = data.map(post => `
-                <div class="content-item">
-                    <div class="content-details">
-                        <div class="item-title">${post.title}</div>
-                        <div class="item-meta">ID: ${post._id} | Дата: ${new Date(post.date).toLocaleDateString('uk-UA')}</div>
-                    </div>
-                    <button class="btn btn-danger" onclick="deleteItem('/news', '${post._id}', loadList.bind(null, '/news', 'newsList', renderNewsList))">Видалити</button>
-                </div>
-            `).join('');
-        }
-
-        function renderHomeworkList(data) {
-            const list = document.getElementById('homeworkList');
-            if (data.length === 0) {
-                list.innerHTML = '<p style="color: #7f8c8d;">Завдань поки немає.</p>';
-                return;
-            }
-            list.innerHTML = data.map(hw => `
-                <div class="content-item">
-                    <div class="content-details">
-                        <div class="item-title">${hw.title}</div>
-                        <div class="item-meta">ID: ${hw._id}</div>
-                    </div>
-                    <button class="btn btn-danger" onclick="deleteItem('/homework', '${hw._id}', loadList.bind(null, '/homework', 'homeworkList', renderHomeworkList))">Видалити</button>
-                </div>
-            `).join('');
-        }
-
-        function renderEventsList(data) {
-             const list = document.getElementById('eventsList');
-            if (data.length === 0) {
-                list.innerHTML = '<p style="color: #7f8c8d;">Подій поки немає.</p>';
-                return;
-            }
-            list.innerHTML = data.map(event => `
-                <div class="content-item">
-                    <div class="content-details">
-                        <div class="item-title">${event.title}</div>
-                        <div class="item-meta">${event.date}, ${event.location} | ID: ${event._id}</div>
-                    </div>
-                    <button class="btn btn-danger" onclick="deleteItem('/events', '${event._id}', loadList.bind(null, '/events', 'eventsList', renderEventsList))">Видалити</button>
-                </div>
-            `).join('');
-        }
-        
-        function renderSheetsConfig() {
-            const configDiv = document.getElementById('sheetsCurrentConfig');
-            if (sheetsConfig.url) {
-                configDiv.innerHTML = `
-                    <strong>Поточне посилання:</strong> 
-                    <a href="${sheetsConfig.url}" target="_blank">${sheetsConfig.url.substring(0, 80)}...</a>
-                `;
-            } else {
-                configDiv.innerHTML = '<strong>Поточне посилання:</strong> Не встановлено';
-            }
-        }
-
-        function renderTournamentsConfig() {
-            const configDiv = document.getElementById('tournamentsCurrentConfig');
-            
-            let current = tournamentsConfig.current ? 
-                `<strong>Поточний турнір:</strong> <a href="${tournamentsConfig.current.link}" target="_blank">${tournamentsConfig.current.title}</a>` :
-                '<strong>Поточний турнір:</strong> Немає';
-                
-            let lastWeek = tournamentsConfig.lastWeek ? 
-                `<strong>Результати минулого тижня:</strong> <pre style="white-space: pre-wrap; margin: 0; font-family: inherit;">${tournamentsConfig.lastWeek.substring(0, 200)}...</pre>` :
-                '<strong>Результати минулого тижня:</strong> Немає';
-
-            configDiv.innerHTML = `<div class="current-setting">${current}<hr style="margin: 10px 0; border: 0; border-top: 1px solid #e0e0e0;">${lastWeek}</div>`;
-        }
-
-        // --- Функції видалення ---
-
-        async function deleteItem(endpoint, id, reloadFunction) {
-            if (!confirm('Ви впевнені, що хочете видалити цей елемент?')) return;
-
-            try {
-                const response = await fetch(`${API_URL}${endpoint}/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: ADMIN_PASSWORD })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    showAlert('Успішно видалено!', 'success');
-                    reloadFunction();
-                } else {
-                    showAlert(result.error || 'Помилка видалення', 'error');
-                }
-            } catch (error) {
-                showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
-            }
-        }
-
-        // --- Форми POST (Обробка) ---
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            // Додаємо обробники подій для форм після їх рендерингу
-            
-            document.getElementById('app').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const formId = e.target.id;
-                
-                if (formId === 'news-form') return publishNews(e);
-                if (formId === 'homework-form') return publishHomework(e);
-                if (formId === 'events-form') return publishEvent(e);
-                if (formId === 'tournaments-form') return publishTournament(e);
-                if (formId === 'sheets-config-form') return saveSheets(e);
-            });
-            
-             // Ініціалізація
-            render();
-        });
-
-
-        async function publishNews(e) {
+        async function publishNews() {
             const title = document.getElementById('newsTitle').value.trim();
             const description = document.getElementById('newsDesc').value.trim();
             const imageInput = document.getElementById('newsImage');
             
             if (!title || !description) {
-                showAlert('Заповніть всі текстові поля!', 'error');
+                showAlert('Заповніть всі обов\'язкові поля!', 'error');
                 return;
             }
 
             disableButton('newsBtn');
 
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('password', ADMIN_PASSWORD);
-            
-            if (imageInput.files[0]) {
-                formData.append('image', imageInput.files[0]);
-            }
-
             try {
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('description', description);
+                formData.append('password', ADMIN_PASSWORD);
+                
+                if (imageInput.files[0]) {
+                    formData.append('image', imageInput.files[0]);
+                }
+
                 const response = await fetch(`${API_URL}/news`, {
                     method: 'POST',
                     body: formData
@@ -932,9 +798,11 @@
 
                 if (response.ok) {
                     showAlert('Новину успішно опубліковано!');
-                    e.target.reset();
+                    document.getElementById('newsTitle').value = '';
+                    document.getElementById('newsDesc').value = '';
+                    document.getElementById('newsImage').value = '';
                     document.getElementById('newsPreview').style.display = 'none';
-                    await loadList('/news', 'newsList', renderNewsList);
+                    await loadNews(); // Оновити список
                 } else {
                     showAlert(result.error || 'Помилка публікації', 'error');
                 }
@@ -945,7 +813,7 @@
             }
         }
 
-        async function publishHomework(e) {
+        async function publishHomework() {
             const title = document.getElementById('hwTitle').value.trim();
             const imageInput = document.getElementById('hwImage');
             
@@ -956,12 +824,12 @@
 
             disableButton('hwBtn');
 
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('password', ADMIN_PASSWORD);
-            formData.append('image', imageInput.files[0]);
-
             try {
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('password', ADMIN_PASSWORD);
+                formData.append('image', imageInput.files[0]);
+
                 const response = await fetch(`${API_URL}/homework`, {
                     method: 'POST',
                     body: formData
@@ -971,9 +839,10 @@
 
                 if (response.ok) {
                     showAlert('Завдання успішно додано!');
-                    e.target.reset();
+                    document.getElementById('hwTitle').value = '';
+                    document.getElementById('hwImage').value = '';
                     document.getElementById('hwPreview').style.display = 'none';
-                    await loadList('/homework', 'homeworkList', renderHomeworkList);
+                    await loadHomework(); // Оновити список
                 } else {
                     showAlert(result.error || 'Помилка додавання', 'error');
                 }
@@ -984,7 +853,82 @@
             }
         }
 
-        async function publishEvent(e) {
+        async function saveSheets() {
+            const url = document.getElementById('sheetsUrl').value.trim();
+            
+            if (!url) {
+                showAlert('Введіть посилання на Google Таблицю!', 'error');
+                return;
+            }
+
+            if (!url.includes('docs.google.com/spreadsheets')) {
+                showAlert('Невірний формат посилання!', 'error');
+                return;
+            }
+
+            disableButton('sheetsBtn');
+
+            try {
+                const response = await fetch(`${API_URL}/sheets-config`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url, password: ADMIN_PASSWORD })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert('Налаштування збережено!');
+                    await loadSheetsConfig(); // Оновити відображення
+                } else {
+                    showAlert(result.error || 'Помилка збереження', 'error');
+                }
+            } catch (error) {
+                showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
+            } finally {
+                enableButton('sheetsBtn', 'Зберегти налаштування');
+            }
+        }
+
+        async function publishTournament() {
+            const title = document.getElementById('tournTitle').value.trim();
+            const link = document.getElementById('tournLink').value.trim();
+            const results = document.getElementById('tournResults').value.trim();
+
+            disableButton('tournBtn');
+
+            try {
+                const response = await fetch(`${API_URL}/tournaments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        currentTitle: title,
+                        currentLink: link,
+                        lastWeekResults: results,
+                        password: ADMIN_PASSWORD
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert('Турнір успішно оновлено!');
+                    await loadTournaments(); // Оновити відображення
+                } else {
+                    showAlert(result.error || 'Помилка оновлення', 'error');
+                }
+            } catch (error) {
+                showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
+            } finally {
+                enableButton('tournBtn', 'Оновити турнір');
+            }
+        }
+
+        async function publishEvent() {
             const title = document.getElementById('eventTitle').value.trim();
             const date = document.getElementById('eventDate').value.trim();
             const location = document.getElementById('eventLocation').value.trim();
@@ -1000,9 +944,15 @@
             try {
                 const response = await fetch(`${API_URL}/events`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
-                        title, date, location, description, password: ADMIN_PASSWORD
+                        title,
+                        date,
+                        location,
+                        description,
+                        password: ADMIN_PASSWORD
                     })
                 });
 
@@ -1010,8 +960,11 @@
 
                 if (response.ok) {
                     showAlert('Подію успішно додано!');
-                    e.target.reset();
-                    await loadList('/events', 'eventsList', renderEventsList);
+                    document.getElementById('eventTitle').value = '';
+                    document.getElementById('eventDate').value = '';
+                    document.getElementById('eventLocation').value = '';
+                    document.getElementById('eventDesc').value = '';
+                    await loadEvents(); // Оновити список
                 } else {
                     showAlert(result.error || 'Помилка додавання', 'error');
                 }
@@ -1022,74 +975,8 @@
             }
         }
 
-        async function publishTournament(e) {
-            const currentTitle = document.getElementById('tournTitle').value.trim();
-            const currentLink = document.getElementById('tournLink').value.trim();
-            const lastWeekResults = document.getElementById('tournResults').value.trim();
-
-            disableButton('tournBtn');
-
-            try {
-                const response = await fetch(`${API_URL}/tournaments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        currentTitle, currentLink, lastWeekResults, password: ADMIN_PASSWORD
-                    })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    showAlert('Налаштування турнірів успішно збережено!');
-                    await loadConfigs();
-                } else {
-                    showAlert(result.error || 'Помилка збереження', 'error');
-                }
-            } catch (error) {
-                showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
-            } finally {
-                enableButton('tournBtn', 'Оновити турнір');
-            }
-        }
-
-        async function saveSheets(e) {
-            const url = document.getElementById('sheetsUrl').value.trim();
-            
-            if (!url) {
-                showAlert('Введіть посилання на Google Таблицю!', 'error');
-                return;
-            }
-
-            if (!url.includes('docs.google.com/spreadsheets')) {
-                showAlert('Невірний формат посилання! Повинно починатися з https://docs.google.com/spreadsheets...', 'error');
-                return;
-            }
-
-            disableButton('sheetsBtn');
-
-            try {
-                const response = await fetch(`${API_URL}/sheets-config`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url, password: ADMIN_PASSWORD })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    showAlert('Посилання Google Sheets успішно підключено та збережено!');
-                    await loadConfigs(); 
-                } else {
-                    showAlert(result.error || 'Помилка підключення/збереження', 'error');
-                }
-            } catch (error) {
-                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
-            } finally {
-                enableButton('sheetsBtn', 'Зберегти налаштування');
-            }
-        }
-
+        // Ініціалізація
+        render();
     </script>
 </body>
 </html>
