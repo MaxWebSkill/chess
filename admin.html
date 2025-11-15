@@ -302,10 +302,9 @@
 
     <script>
         // НАЛАШТУВАННЯ: Вкажіть URL вашого бекенду
-        // URL ВСТАНОВЛЕНО НА Render
+        // ОНОВЛЕНО: Використовується ваше посилання на Render
         const API_URL = 'https://chess-2pyz.onrender.com/api'; 
-        // 🔑 ПАРОЛЬ: ПЕРЕКОНАЙТЕСЯ, ЩО ЦЕЙ ПАРОЛЬ ТАКОЖ ВСТАНОВЛЕНО НА ВАШОМУ БЕКЕНДІ RENDER
-        const ADMIN_PASSWORD = 'GlobusTeam'; 
+        const ADMIN_PASSWORD = 'GlobusTeam'; // Ваш пароль
 
         let isLoggedIn = false;
         let newsData = [];
@@ -614,6 +613,11 @@
         function renderTournamentsConfig() {
             const configDiv = document.getElementById('tournamentsCurrentConfig');
             
+            if (!tournamentsConfig.current && !tournamentsConfig.lastWeek) {
+                configDiv.innerHTML = '<p style="color: #7f8c8d;">Даних про турніри поки немає.</p>';
+                return;
+            }
+
             let current = tournamentsConfig.current ? 
                 `<strong>Поточний турнір:</strong> <a href="${tournamentsConfig.current.link}" target="_blank">${tournamentsConfig.current.title}</a>` :
                 '<strong>Поточний турнір:</strong> Немає';
@@ -622,7 +626,20 @@
                 `<strong>Результати минулого тижня:</strong> <pre style="white-space: pre-wrap; margin: 0; font-family: inherit;">${tournamentsConfig.lastWeek.substring(0, 150)}...</pre>` :
                 '<strong>Результати минулого тижня:</strong> Немає';
 
-            configDiv.innerHTML = `<div class="current-setting">${current}<hr style="margin: 10px 0; border: 0; border-top: 1px solid #e0e0e0;">${lastWeek}</div>`;
+            const deleteButtonHtml = `
+                <div style="margin-top: 1rem; text-align: right;">
+                    <button class="btn btn-danger" onclick="deleteTournamentConfig()" style="width: auto;">Видалити поточні налаштування</button>
+                </div>
+            `;
+
+            configDiv.innerHTML = `
+                <div class="current-setting">
+                    ${current}
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #e0e0e0;">
+                    ${lastWeek}
+                </div>
+                ${deleteButtonHtml}
+            `;
         }
         
         // --- Функції CRUD ---
@@ -643,7 +660,7 @@
                     showAlert('Новину успішно видалено!', 'success');
                     await loadNews();
                 } else {
-                    showAlert(result.error || 'Помилка видалення новини (невірний пароль?)', 'error');
+                    showAlert(result.error || 'Помилка видалення новини', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -666,7 +683,7 @@
                     showAlert('Завдання успішно видалено!', 'success');
                     await loadHomework();
                 } else {
-                    showAlert(result.error || 'Помилка видалення завдання (невірний пароль?)', 'error');
+                    showAlert(result.error || 'Помилка видалення завдання', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -689,7 +706,34 @@
                     showAlert('Подію успішно видалено!', 'success');
                     await loadEvents();
                 } else {
-                    showAlert(result.error || 'Помилка видалення події (невірний пароль?)', 'error');
+                    showAlert(result.error || 'Помилка видалення події', 'error');
+                }
+            } catch (error) {
+                showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteTournamentConfig() {
+            if (!confirm('Ви впевнені, що хочете видалити поточні налаштування турнірів (поточний турнір та результати минулого тижня)? Це призведе до очищення даних.')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/tournaments`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: ADMIN_PASSWORD })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert('Налаштування турнірів успішно видалено!', 'success');
+                    // Очищення полів форми
+                    document.getElementById('tournTitle').value = '';
+                    document.getElementById('tournLink').value = '';
+                    document.getElementById('tournResults').value = '';
+                    await loadTournaments(); // Оновлення відображення
+                } else {
+                    showAlert(result.error || 'Помилка видалення налаштувань турнірів', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -701,8 +745,6 @@
         function login() {
             const password = document.getElementById('password').value;
             const alertDiv = document.getElementById('loginAlert');
-            
-            // Якщо ви викликали disableButton тут, переконайтеся, що кнопка має ID
             
             if (password === ADMIN_PASSWORD) {
                 isLoggedIn = true;
@@ -803,7 +845,7 @@
                     document.getElementById('newsPreview').style.display = 'none';
                     await loadNews(); // Оновити список
                 } else {
-                    showAlert(result.error || 'Помилка публікації (невірний пароль?)', 'error');
+                    showAlert(result.error || 'Помилка публікації', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -843,7 +885,7 @@
                     document.getElementById('hwPreview').style.display = 'none';
                     await loadHomework(); // Оновити список
                 } else {
-                    showAlert(result.error || 'Помилка додавання (невірний пароль?)', 'error');
+                    showAlert(result.error || 'Помилка додавання', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -882,7 +924,7 @@
                     showAlert('Налаштування збережено!');
                     await loadSheetsConfig(); // Оновити відображення
                 } else {
-                    showAlert(result.error || 'Помилка збереження (невірний пароль?)', 'error');
+                    showAlert(result.error || 'Помилка збереження', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -918,7 +960,7 @@
                     showAlert('Турнір успішно оновлено!');
                     await loadTournaments(); // Оновити відображення
                 } else {
-                    showAlert(result.error || 'Помилка оновлення (невірний пароль?)', 'error');
+                    showAlert(result.error || 'Помилка оновлення', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
@@ -965,7 +1007,7 @@
                     document.getElementById('eventDesc').value = '';
                     await loadEvents(); // Оновити список
                 } else {
-                    showAlert(result.error || 'Помилка додавання (невірний пароль?)', 'error');
+                    showAlert(result.error || 'Помилка додавання', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
