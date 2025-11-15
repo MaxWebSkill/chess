@@ -643,16 +643,15 @@
             `;
         }
         
-        // --- Функції CRUD ---
+        // --- Функції CRUD (Видалення виправлено для всіх) ---
         
-        // ВИПРАВЛЕНО: Передача пароля через query parameter
+        // ВИДАЛЕННЯ НОВИНИ
         async function deleteNews(id) {
             if (!confirm(`Ви впевнені, що хочете видалити новину з ID: ${id}?`)) return;
             
             try {
                 const response = await fetch(`${API_URL}/news/${id}?password=${ADMIN_PASSWORD}`, {
                     method: 'DELETE',
-                    // ВИДАЛЕНО: headers та body
                 });
 
                 const result = await response.json();
@@ -661,21 +660,20 @@
                     showAlert('Новину успішно видалено!', 'success');
                     await loadNews();
                 } else {
-                    showAlert(result.error || 'Помилка видалення новини (зв\'яжіться з адміністратором бекенду)', 'error');
+                    showAlert(result.error || 'Помилка видалення новини', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             }
         }
         
-        // ВИПРАВЛЕНО: Передача пароля через query parameter
+        // ВИДАЛЕННЯ ЗАВДАННЯ
         async function deleteHomework(id) {
             if (!confirm(`Ви впевнені, що хочете видалити завдання з ID: ${id}?`)) return;
 
             try {
                 const response = await fetch(`${API_URL}/homework/${id}?password=${ADMIN_PASSWORD}`, {
                     method: 'DELETE',
-                    // ВИДАЛЕНО: headers та body
                 });
 
                 const result = await response.json();
@@ -684,21 +682,20 @@
                     showAlert('Завдання успішно видалено!', 'success');
                     await loadHomework();
                 } else {
-                    showAlert(result.error || 'Помилка видалення завдання (зв\'яжіться з адміністратором бекенду)', 'error');
+                    showAlert(result.error || 'Помилка видалення завдання', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             }
         }
         
-        // ВИПРАВЛЕНО: Передача пароля через query parameter
+        // ВИДАЛЕННЯ ПОДІЇ
         async function deleteEvent(id) {
             if (!confirm(`Ви впевнені, що хочете видалити подію з ID: ${id}?`)) return;
 
             try {
                 const response = await fetch(`${API_URL}/events/${id}?password=${ADMIN_PASSWORD}`, {
                     method: 'DELETE',
-                    // ВИДАЛЕНО: headers та body
                 });
 
                 const result = await response.json();
@@ -707,21 +704,20 @@
                     showAlert('Подію успішно видалено!', 'success');
                     await loadEvents();
                 } else {
-                    showAlert(result.error || 'Помилка видалення події (зв\'яжіться з адміністратором бекенду)', 'error');
+                    showAlert(result.error || 'Помилка видалення події', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             }
         }
 
-        // ВИПРАВЛЕНО: Передача пароля через query parameter
+        // ВИДАЛЕННЯ КОНФІГУРАЦІЇ ТУРНІРІВ
         async function deleteTournamentConfig() {
             if (!confirm('Ви впевнені, що хочете видалити поточні налаштування турнірів (поточний турнір та результати минулого тижня)? Це призведе до очищення даних.')) return;
 
             try {
                 const response = await fetch(`${API_URL}/tournaments?password=${ADMIN_PASSWORD}`, {
                     method: 'DELETE',
-                    // ВИДАЛЕНО: headers та body
                 });
 
                 const result = await response.json();
@@ -734,14 +730,14 @@
                     document.getElementById('tournResults').value = '';
                     await loadTournaments(); // Оновлення відображення
                 } else {
-                    showAlert(result.error || 'Помилка видалення налаштувань турнірів (зв\'яжіться з адміністратором бекенду)', 'error');
+                    showAlert(result.error || 'Помилка видалення налаштувань турнірів', 'error');
                 }
             } catch (error) {
                 showAlert('Помилка з\'єднання з сервером: ' + error.message, 'error');
             }
         }
 
-        // --- Існуючі функції (БЕЗ ЗМІН) ---
+        // --- Існуючі функції (Вхід, Публікація тощо) ---
 
         function login() {
             const password = document.getElementById('password').value;
