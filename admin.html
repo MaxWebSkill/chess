@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Адмін-панель - Шаховий Гурток</title>
+    <title>Адмін-панель</title>
     <style>
         * {
             margin: 0;
@@ -304,7 +304,7 @@
         // НАЛАШТУВАННЯ: Вкажіть URL вашого бекенду
         // ОНОВЛЕНО: Використовується ваше посилання на Render
         const API_URL = 'https://chess-2pyz.onrender.com/api'; 
-        const ADMIN_PASSWORD = 'chess2024'; // Ваш пароль
+        const ADMIN_PASSWORD = 'GlobusTeam'; // Ваш пароль
 
         let isLoggedIn = false;
         let newsData = [];
@@ -327,7 +327,7 @@
         function renderLogin() {
             return `
                 <div class="header">
-                    <h1>🔐 Адмін-панель</h1>
+                    <h1>Адмін-панель</h1>
                     <p>Шаховий Гурток - Панель керування</p>
                 </div>
                 <div class="login-container">
@@ -345,7 +345,7 @@
         function renderAdminPanel() {
             return `
                 <div class="header">
-                    <h1>⚙️ Адмін-панель</h1>
+                    <h1>Адмін-панель</h1>
                     <p>Керування контентом сайту</p>
                     <button class="logout-btn" onclick="logout()">Вийти</button>
                 </div>
@@ -353,7 +353,7 @@
                     <div id="alerts"></div>
 
                     <div class="section">
-                        <h2 class="section-title">📰 Додати новину</h2>
+                        <h2 class="section-title">Додати новину</h2>
                         <div class="form-group">
                             <label class="form-label">Заголовок новини</label>
                             <input type="text" id="newsTitle" class="input" placeholder="Наприклад: Іван Петренко отримав 1 розряд!">
@@ -366,7 +366,7 @@
                             <label class="form-label">Фото</label>
                             <div class="file-input-wrapper">
                                 <label class="file-input-label" for="newsImage">
-                                    📸 Натисніть для вибору фото
+                                    Натисніть для вибору фото
                                 </label>
                                 <input type="file" id="newsImage" accept="image/*" onchange="previewImage(this, 'newsPreview')">
                             </div>
@@ -376,12 +376,12 @@
                     </div>
 
                     <div class="section">
-                        <h2 class="section-title">🗑️ Керування новинами</h2>
+                        <h2 class="section-title">Керування новинами</h2>
                         <div id="newsList">Завантаження новин...</div>
                     </div>
 
                     <div class="section">
-                        <h2 class="section-title">📚 Додати домашнє завдання</h2>
+                        <h2 class="section-title">Додати домашнє завдання</h2>
                         <div class="form-group">
                             <label class="form-label">Назва завдання</label>
                             <input type="text" id="hwTitle" class="input" placeholder="Наприклад: Завдання на тиждень 15-21 листопада">
@@ -389,11 +389,11 @@
                         <div class="form-group">
                             <label class="form-label">Зображення завдання</label>
                             <div class="info-box">
-                                ℹ️ Завантажте зображення з шаховою позицією або задачею
+                                ℹЗавантажте зображення з шаховою позицією або задачею
                             </div>
                             <div class="file-input-wrapper">
                                 <label class="file-input-label" for="hwImage">
-                                    📸 Натисніть для вибору зображення
+                                    Натисніть для вибору зображення
                                 </label>
                                 <input type="file" id="hwImage" accept="image/*" onchange="previewImage(this, 'hwPreview')">
                             </div>
@@ -403,14 +403,14 @@
                     </div>
                     
                     <div class="section">
-                        <h2 class="section-title">🗑️ Керування завданнями</h2>
+                        <h2 class="section-title">Керування завданнями</h2>
                         <div id="homeworkList">Завантаження завдань...</div>
                     </div>
 
                     <div class="section">
-                        <h2 class="section-title">👥 Налаштування Google Таблиці</h2>
+                        <h2 class="section-title">Налаштування Google Таблиці</h2>
                         <div class="info-box">
-                            <strong>📋 Інструкція:</strong><br>
+                            <strong>Інструкція:</strong><br>
                             1. Створіть Google Таблицю з двома колонками: "Ім'я" та "Розряд"<br>
                             2. Налаштуйте доступ: Файл → Надати доступ → Будь-хто з посиланням може переглядати<br>
                             3. Скопіюйте посилання на таблицю і вставте нижче<br>
@@ -427,7 +427,7 @@
                     </div>
 
                     <div class="section">
-                        <h2 class="section-title">🏆 Оновити турнір</h2>
+                        <h2 class="section-title">Оновити турнір</h2>
                         <div class="form-group">
                             <label class="form-label">Назва поточного турніру</label>
                             <input type="text" id="tournTitle" class="input" placeholder="Наприклад: Турнір вихідного дня">
@@ -446,12 +446,12 @@
                     </div>
                     
                     <div class="section">
-                        <h2 class="section-title">ℹ️ Поточна інформація про турніри</h2>
+                        <h2 class="section-title">ℹПоточна інформація про турніри</h2>
                         <div id="tournamentsCurrentConfig">Завантаження...</div>
                     </div>
 
                     <div class="section">
-                        <h2 class="section-title">📅 Додати подію</h2>
+                        <h2 class="section-title">Додати подію</h2>
                         <div class="form-group">
                             <label class="form-label">Назва події</label>
                             <input type="text" id="eventTitle" class="input" placeholder="Наприклад: Відкритий турнір Львівської області">
@@ -472,7 +472,7 @@
                     </div>
                     
                     <div class="section">
-                        <h2 class="section-title">🗑️ Керування подіями</h2>
+                        <h2 class="section-title">Керування подіями</h2>
                         <div id="eventsList">Завантаження подій...</div>
                     </div>
                 </div>
