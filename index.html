@@ -282,6 +282,10 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                background: #f0f2f5;
+            }
+
             .header h1 {
                 font-size: 20px;
             }
@@ -307,7 +311,79 @@
                 border-bottom: 1px solid #2c3e50;
             }
 
+            .container {
+                max-width: 100%;
+                margin: 0;
+                padding: 0.5rem;
+            }
+
             .card {
+                padding: 0;
+                margin-bottom: 0.5rem;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .card-title {
+                padding: 1rem;
+                margin-bottom: 0;
+                border-bottom: 2px solid #3498db;
+            }
+
+            .news-post {
+                background: #fff;
+                padding: 0;
+                margin-bottom: 0.5rem;
+                border-radius: 8px;
+                border: none;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                overflow: hidden;
+            }
+
+            .news-image {
+                border-radius: 0;
+                margin-bottom: 0;
+            }
+
+            .news-title,
+            .news-desc,
+            .news-date {
+                padding: 0 1rem;
+            }
+
+            .news-title {
+                padding-top: 1rem;
+            }
+
+            .news-date {
+                padding-bottom: 1rem;
+            }
+
+            .homework-item {
+                background: #fff;
+                padding: 1rem;
+                margin-bottom: 0.5rem;
+                border-radius: 8px;
+                border: none;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            }
+
+            .event-card {
+                background: #fff;
+                padding: 1rem;
+                margin-bottom: 0.5rem;
+                border-radius: 8px;
+                border-left: 4px solid #e74c3c;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            }
+
+            #membersList,
+            #currentTournament,
+            #lastWeekResults,
+            #homeworkList,
+            #newsList,
+            #eventsList {
                 padding: 1rem;
             }
 
@@ -383,8 +459,6 @@
     </div>
 
     <script>
-        // НАЛАШТУВАННЯ: Вкажіть URL вашого бекенду
-        // ОНОВЛЕНО: Використовується ваше посилання на Render
         const API_URL = 'https://chess-2pyz.onrender.com/api';
 
         let newsData = [];
@@ -392,9 +466,8 @@
         let membersData = [];
         let tournamentsData = { current: null, lastWeek: null };
         let eventsData = [];
-        let googleSheetsUrl = ''; // Залишаємо для перевірки наявності конфігурації
+        let googleSheetsUrl = '';
 
-        // Завантаження даних
         async function loadAllData() {
             try {
                 await Promise.all([
@@ -431,7 +504,6 @@
             }
         }
         
-        // Змінено: Перевіряємо URL і викликаємо функцію завантаження учасників
         async function loadSheetsConfig() {
             try {
                 const response = await fetch(`${API_URL}/sheets-config`);
@@ -444,21 +516,17 @@
             }
         }
 
-        // Змінено: Тепер просто викликаємо API бекенда, який сам завантажує дані з Google Sheets
         async function loadMembersFromSheets() {
             if (!googleSheetsUrl) {
-                // Якщо посилання не встановлено, відображаємо пустий список
                 membersData = [];
                 renderMembers();
                 return;
             }
 
             try {
-                // Викликаємо новий ендпоінт, який повертає вже розпарсений JSON
                 const response = await fetch(`${API_URL}/members`);
                 
                 if (!response.ok) {
-                     // Якщо бекенд повернув 500 (через помилку доступу до Google Sheets)
                     const errorJson = await response.json();
                     throw new Error(errorJson.error || 'Помилка бекенду при завантаженні учасників.');
                 }
@@ -537,8 +605,6 @@
             const list = document.getElementById('membersList');
 
             if (membersData.length === 0 && googleSheetsUrl) {
-                // Якщо дані порожні, але URL встановлений, це може бути помилка завантаження
-                // Повідомлення про помилку буде відображено у блоці try-catch loadMembersFromSheets
                 if (list.innerHTML.includes('Завантаження')) {
                      list.innerHTML = `<p style="color: #7f8c8d;">Дані не завантажено. Перевірте посилання в Адмін-панелі та доступ до Таблиці.</p>`;
                 }
@@ -636,10 +702,7 @@
             document.getElementById('mainNav').classList.toggle('mobile-open');
         }
 
-        // Завантаження даних при старті
         loadAllData();
-
-        // Періодичне оновлення (кожні 30 секунд)
         setInterval(loadAllData, 30000);
     </script>
 </body>
